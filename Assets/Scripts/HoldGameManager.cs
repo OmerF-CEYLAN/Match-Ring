@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HoldGameManager : GameManager
 {
@@ -74,7 +75,9 @@ public class HoldGameManager : GameManager
             AddScore(3);
             EventBus<ShakeEvent>.Publish(new ShakeEvent());
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 3});
+            EventBus<PerfectMatchSFXEvent>.Publish(new PerfectMatchSFXEvent());
             StartCoroutine(NextRingDelay());
+            StartCoroutine(SetRingColor());
         }
         else if(differenceRate <= 20f)
         {
@@ -113,5 +116,23 @@ public class HoldGameManager : GameManager
     {
         dynamicRing.isActive = true;
         dynamicRing.ResetSize();
+    }
+
+    IEnumerator SetRingColor()
+    {
+        yield return new WaitForSeconds(delayForNextRing);
+        dynamicRing.GetComponent<Image>().color = UnityEngine.Random.ColorHSV(
+        0f, 1f,
+        0.7f, 1f,
+        0.8f, 1f,
+        0.392f, 0.392f
+        );
+        
+        staticRing.GetComponent<Image>().color = UnityEngine.Random.ColorHSV(
+        0f, 1f,
+        0.7f, 1f,
+        0.8f, 1f,
+        0.392f, 0.392f
+        );
     }
 }

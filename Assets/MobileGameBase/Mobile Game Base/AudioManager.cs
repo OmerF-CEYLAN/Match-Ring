@@ -22,6 +22,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip idleMusic;
     [SerializeField] private AudioClip gameplayMusic;
     [SerializeField] private AudioClip gameOverStinger;
+    [SerializeField] private AudioClip perfectMatchEffect;
     [SerializeField] private float fadeDuration = 0.5f;
 
     [Header("Default Volumes")]
@@ -49,6 +50,7 @@ public class AudioManager : MonoBehaviour
     private EventBinding<GameOverEvent> gameOverBinding;
     private EventBinding<PlaySFXEvent> playSFXBinding;
     private EventBinding<PlayMusicEvent> playMusicBinding;
+    private EventBinding<PerfectMatchSFXEvent> perfectMatchSFXBinding;
 
     // ───────────────────────────────────────────────────
     //  PlayerPrefs Keys
@@ -81,11 +83,13 @@ public class AudioManager : MonoBehaviour
         gameOverBinding = new EventBinding<GameOverEvent>(HandleGameOver);
         playSFXBinding = new EventBinding<PlaySFXEvent>(HandlePlaySFX);
         playMusicBinding = new EventBinding<PlayMusicEvent>(HandlePlayMusic);
+        perfectMatchSFXBinding = new EventBinding<PerfectMatchSFXEvent>(HandlePerfectMatchSFX);
 
         EventBus<GameStartedEvent>.Subscribe(gameStartedBinding);
         EventBus<GameOverEvent>.Subscribe(gameOverBinding);
         EventBus<PlaySFXEvent>.Subscribe(playSFXBinding);
         EventBus<PlayMusicEvent>.Subscribe(playMusicBinding);
+        EventBus<PerfectMatchSFXEvent>.Subscribe(perfectMatchSFXBinding);
     }
 
     private void OnDisable()
@@ -94,6 +98,7 @@ public class AudioManager : MonoBehaviour
         EventBus<GameOverEvent>.Unsubscribe(gameOverBinding);
         EventBus<PlaySFXEvent>.Unsubscribe(playSFXBinding);
         EventBus<PlayMusicEvent>.Unsubscribe(playMusicBinding);
+        EventBus<PerfectMatchSFXEvent>.Unsubscribe(perfectMatchSFXBinding);
     }
 
     // ───────────────────────────────────────────────────
@@ -124,6 +129,11 @@ public class AudioManager : MonoBehaviour
     {
         if (e.fade) FadeToMusic(e.clip);
         else PlayMusic(e.clip);
+    }
+
+    void HandlePerfectMatchSFX()
+    {
+        PlaySFX(perfectMatchEffect);
     }
 
     // ───────────────────────────────────────────────────

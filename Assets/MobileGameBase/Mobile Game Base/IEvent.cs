@@ -99,3 +99,7 @@ public struct AccuricyTextEvent : IEvent
 {
     public int score;
 }
+
+public struct PerfectMatchSFXEvent : IEvent
+{
+}

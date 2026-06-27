@@ -1773,6 +1773,7 @@ MonoBehaviour:
   idleMusic: {fileID: 8300000, guid: b630ce5e0e9f7f04693ee4f7f166c5e5, type: 3}
   gameplayMusic: {fileID: 8300000, guid: 783e964710eb8044d91778a9f8cf273f, type: 3}
   gameOverStinger: {fileID: 8300000, guid: d4007067d30a702478f8de23ab74795f, type: 3}
+  perfectMatchEffect: {fileID: 8300000, guid: 371904b12ec4a35468d4955d5278944c, type: 3}
   fadeDuration: 0.5
   defaultMusicVolume: 0.6
   defaultSFXVolume: 1
