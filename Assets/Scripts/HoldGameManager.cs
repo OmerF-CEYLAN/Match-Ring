@@ -144,39 +144,14 @@ public class HoldGameManager : GameManager
     void SetRingColor()
     {
         Image dynamicImage = dynamicRing.GetComponent<Image>();
-        Image staticImage = staticRing.GetComponent<Image>();
 
         Color color1 = UnityEngine.Random.ColorHSV(
             0f, 1f,
             0.7f, 1f,
-            0.8f, 1f,
-            0.392f, 0.392f
+            0.8f, 1f
         );
 
-        Color color2;
-
-        do
-        {
-            color2 = UnityEngine.Random.ColorHSV(
-                0f, 1f,
-                0.7f, 1f,
-                0.8f, 1f,
-                0.392f, 0.392f
-            );
-
-            Color.RGBToHSV(color1, out float h1, out _, out _);
-            Color.RGBToHSV(color2, out float h2, out _, out _);
-
-            float hueDifference = Mathf.Abs(h1 - h2);
-            hueDifference = Mathf.Min(hueDifference, 1f - hueDifference);
-
-            if (hueDifference >= 0.1f)
-                break;
-
-        } while (true);
-
         dynamicImage.color = color1;
-        staticImage.color = color2;
     }
 
     void SetRandomSprite()

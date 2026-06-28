@@ -3,17 +3,17 @@ using UnityEngine;
 
 public class RingVisualController : MonoBehaviour
 {
-    bool isHolding,isSizeIncreasing;
-
+    bool isHolding, isSizeIncreasing;
     public Vector3 minSize, maxSize;
-
     public bool isActive;
+    public float cycleSpeed = 2f;
+
+    float sizeT;
 
     protected void Awake()
     {
         InputManager.OnHoldStart += HandleHoldStart;
         InputManager.OnHoldEnd += HandleHoldEnd;
-
         transform.localScale = minSize;
     }
 
@@ -22,38 +22,35 @@ public class RingVisualController : MonoBehaviour
         InputManager.OnHoldStart -= HandleHoldStart;
         InputManager.OnHoldEnd -= HandleHoldEnd;
     }
+
     private void Update()
     {
-        if(isHolding && isActive)
-        {
+        if (isHolding && isActive)
             HandleSizing();
-        }
     }
 
     void HandleSizing()
     {
-        if(transform.localScale.x <= minSize.x)
-        {
-            isSizeIncreasing = true;
+        sizeT += (isSizeIncreasing ? 1f : -1f) * Time.deltaTime * cycleSpeed;
 
-        }
-        else if(transform.localScale.x >= maxSize.x)
+        if (sizeT >= 1f)
         {
+            sizeT = 1f;
             isSizeIncreasing = false;
         }
+        else if (sizeT <= 0f)
+        {
+            sizeT = 0f;
+            isSizeIncreasing = true;
+        }
 
-        if(isSizeIncreasing)
-        {
-            transform.localScale += new Vector3(7f, 7f) * Time.deltaTime;
-        }
-        else
-        {
-            transform.localScale -= new Vector3(7f, 7f) * Time.deltaTime;
-        }
+        transform.localScale = Vector3.LerpUnclamped(minSize, maxSize, Mathf.SmoothStep(0f, 1f, sizeT));
     }
 
     public void ResetSize()
     {
+        sizeT = 0f;
+        isSizeIncreasing = true;
         transform.localScale = minSize;
     }
 
@@ -64,18 +61,15 @@ public class RingVisualController : MonoBehaviour
 
     private void HandleHoldStart()
     {
-        if (!isActive)
-            return;
-
+        if (!isActive) return;
         isHolding = true;
+        isSizeIncreasing = true;
     }
 
     private void HandleHoldEnd()
     {
-        if (!isActive || !isHolding)
-            return;
-
+        if (!isActive || !isHolding) return;
         isHolding = false;
-        EventBus<RingReleasedEvent>.Publish(new RingReleasedEvent { ringSize = gameObject.transform.localScale.x });
+        EventBus<RingReleasedEvent>.Publish(new RingReleasedEvent { ringSize = transform.localScale.x });
     }
 }
