@@ -17,6 +17,10 @@ public class HoldGameManager : GameManager
 
     EventBinding<RingReleasedEvent> ringReleasedBinding;
 
+    [SerializeField] Sprite[] sprites;
+
+    int lastSelectedIndex = -1;
+
     private void OnEnable()
     {
         ringReleasedBinding = new EventBinding<RingReleasedEvent>(OnRingReleased);
@@ -60,6 +64,10 @@ public class HoldGameManager : GameManager
         dynamicRing.isActive = true;
 
         dynamicRing.ResetSize();
+
+        SetRandomSprite();
+
+        SetRingColor();
     }
 
     void CalculateScore()
@@ -76,8 +84,8 @@ public class HoldGameManager : GameManager
             EventBus<ShakeEvent>.Publish(new ShakeEvent());
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 3});
             EventBus<PerfectMatchSFXEvent>.Publish(new PerfectMatchSFXEvent());
+            ShrinkOnPerfectMatch();
             StartCoroutine(NextRingDelay());
-            StartCoroutine(SetRingColor());
         }
         else if(differenceRate <= 20f)
         {
@@ -88,8 +96,13 @@ public class HoldGameManager : GameManager
         else
         {
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 0 });
-            TriggerGameOver();
+            StartCoroutine(TriggerGameOverDelayed());
         }
+    }
+
+    void ShrinkOnPerfectMatch()
+    {
+        dynamicRing.SetSize(staticRing.transform.localScale);
     }
 
     void OnRingReleased()
@@ -100,7 +113,7 @@ public class HoldGameManager : GameManager
 
     void SetStaticRingSize()
     {
-        float randSize = UnityEngine.Random.Range(minRingSize.x + 0.1f, maxRingSize.x - 0.1f);
+        float randSize = UnityEngine.Random.Range(minRingSize.x + 0.5f, maxRingSize.x - 0.1f);
 
         staticRing.transform.localScale = new Vector3(randSize, randSize, 1);
     }
@@ -109,30 +122,81 @@ public class HoldGameManager : GameManager
     {
         dynamicRing.isActive = true;
         dynamicRing.ResetSize();
+        SetRandomSprite();
         SetStaticRingSize();
+        SetRingColor();
     }
 
     protected override void OnRestart_Hook()
     {
         dynamicRing.isActive = true;
         dynamicRing.ResetSize();
+        SetRandomSprite();
+        SetRingColor();
     }
 
-    IEnumerator SetRingColor()
+    IEnumerator TriggerGameOverDelayed()
     {
         yield return new WaitForSeconds(delayForNextRing);
-        dynamicRing.GetComponent<Image>().color = UnityEngine.Random.ColorHSV(
-        0f, 1f,
-        0.7f, 1f,
-        0.8f, 1f,
-        0.392f, 0.392f
+        TriggerGameOver();
+    }
+
+    void SetRingColor()
+    {
+        Image dynamicImage = dynamicRing.GetComponent<Image>();
+        Image staticImage = staticRing.GetComponent<Image>();
+
+        Color color1 = UnityEngine.Random.ColorHSV(
+            0f, 1f,
+            0.7f, 1f,
+            0.8f, 1f,
+            0.392f, 0.392f
         );
-        
-        staticRing.GetComponent<Image>().color = UnityEngine.Random.ColorHSV(
-        0f, 1f,
-        0.7f, 1f,
-        0.8f, 1f,
-        0.392f, 0.392f
-        );
+
+        Color color2;
+
+        do
+        {
+            color2 = UnityEngine.Random.ColorHSV(
+                0f, 1f,
+                0.7f, 1f,
+                0.8f, 1f,
+                0.392f, 0.392f
+            );
+
+            Color.RGBToHSV(color1, out float h1, out _, out _);
+            Color.RGBToHSV(color2, out float h2, out _, out _);
+
+            float hueDifference = Mathf.Abs(h1 - h2);
+            hueDifference = Mathf.Min(hueDifference, 1f - hueDifference);
+
+            if (hueDifference >= 0.1f)
+                break;
+
+        } while (true);
+
+        dynamicImage.color = color1;
+        staticImage.color = color2;
+    }
+
+    void SetRandomSprite()
+    {
+        Image dynamicRingImage = dynamicRing.GetComponent<Image>();
+        Image staticRingImage = staticRing.GetComponent<Image>();
+
+        int selectedIndex = UnityEngine.Random.Range(0, sprites.Length);
+
+        if(sprites.Length > 1)
+        {
+            while (selectedIndex == lastSelectedIndex)
+            {
+                selectedIndex = UnityEngine.Random.Range(0, sprites.Length);
+            }
+        }
+
+        lastSelectedIndex = selectedIndex;
+
+        dynamicRingImage.sprite = sprites[selectedIndex];
+        staticRingImage.sprite = dynamicRingImage.sprite;
     }
 }

@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using static System.Net.Mime.MediaTypeNames;
 
 public class GameUI : MonoBehaviour
 {
@@ -26,10 +27,12 @@ public class GameUI : MonoBehaviour
     [Header("Game Over Screen")]
     [SerializeField] private TextMeshProUGUI gameOverScoreText;
     [SerializeField] private TextMeshProUGUI gameOverHighScoreText;
+    [SerializeField] private TextMeshProUGUI restartText;
     [SerializeField] private GameObject newRecordObject;
 
     [Header("Idle Screen")]
     [SerializeField] private TextMeshProUGUI idleHighScoreText;
+    [SerializeField] private TextMeshProUGUI titleText;
 
     [Header("Buttons")]
     [SerializeField] private Button restartButton;
@@ -85,6 +88,8 @@ public class GameUI : MonoBehaviour
             cachedHighScore = GameManager.Instance.HighScore;
 
         ShowIdle();
+        PlayAnimation(titleText);
+        PlayAnimation(restartText);
     }
 
     // ───────────────────────────────────────────────────
@@ -181,4 +186,20 @@ public class GameUI : MonoBehaviour
     {
         if (label != null) label.text = value;
     }
+
+    void PlayAnimation(TextMeshProUGUI textToAnimate)
+    {
+        textToAnimate.DOKill();
+
+        Sequence seq = DOTween.Sequence();
+
+        seq.Append(
+            textToAnimate.transform
+                .DOScale(1.3f, 1f)
+                .SetEase(Ease.InOutSine)
+        );
+
+        seq.SetLoops(-1, LoopType.Yoyo);
+    }
+
 }

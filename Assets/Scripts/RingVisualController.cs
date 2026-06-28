@@ -57,6 +57,11 @@ public class RingVisualController : MonoBehaviour
         transform.localScale = minSize;
     }
 
+    public void SetSize(Vector3 size)
+    {
+        transform.localScale = size;
+    }
+
     private void HandleHoldStart()
     {
         if (!isActive)
