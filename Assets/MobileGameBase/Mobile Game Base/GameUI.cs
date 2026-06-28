@@ -133,10 +133,13 @@ public class GameUI : MonoBehaviour
     void HandleAccuricyText(AccuricyTextEvent e)
     {
         accuricyText.gameObject.SetActive(true);
+        RainbowWaveText effect = accuricyText.GetComponent<RainbowWaveText>();
+        effect.enabled = false;
 
-        if(e.score == 3)
+        if (e.score == 3)
         {
             accuricyText.text = "Perfect!";
+            effect.enabled = true;
         }
         else if(e.score == 1)
         {
@@ -157,6 +160,7 @@ public class GameUI : MonoBehaviour
             .SetEase(Ease.OutBounce)
             .OnComplete(() =>
             {
+                effect.enabled = false;
                 accuricyText.gameObject.SetActive(false);
             });
     }
