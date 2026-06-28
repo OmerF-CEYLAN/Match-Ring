@@ -51,6 +51,8 @@ public class GameUI : MonoBehaviour
     private EventBinding<NewHighScoreEvent> newHighScoreBinding;
     private EventBinding<AccuricyTextEvent> accuricyTextBinding;
 
+    private int displayedScore;
+
     // ───────────────────────────────────────────────────
     //  Lifecycle
     // ───────────────────────────────────────────────────
@@ -97,6 +99,7 @@ public class GameUI : MonoBehaviour
     // ───────────────────────────────────────────────────
     private void HandleGameStarted()
     {
+        displayedScore = 0;
         accuricyText.DOKill();
         accuricyText.gameObject.SetActive(false);
         idlePanel?.SetActive(false);
@@ -120,7 +123,30 @@ public class GameUI : MonoBehaviour
 
     private void HandleScoreChanged(ScoreChangedEvent e)
     {
-        SetText(scoreText, Mathf.FloorToInt(e.currentScore).ToString());
+        scoreText.DOKill();
+
+        int targetScore = Mathf.FloorToInt(e.currentScore);
+
+        Sequence seq = DOTween.Sequence();
+
+        seq.Join(
+            DOTween.To(
+                () => displayedScore,
+                x =>
+                {
+                    displayedScore = x;
+                    scoreText.text = x.ToString();
+                },
+                targetScore,
+                0.9f
+            )
+        );
+
+        seq.Join(
+            scoreText.rectTransform
+                .DOScale(1.2f, 0.125f)
+                .SetLoops(2, LoopType.Yoyo)
+        );
     }
 
     private void HandleNewHighScore(NewHighScoreEvent e)
