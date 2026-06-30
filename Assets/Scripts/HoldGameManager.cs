@@ -39,6 +39,9 @@ public class HoldGameManager : GameManager
 
     private void Start()
     {
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 0;
+
         dynamicRing.minSize = minRingSize;
         dynamicRing.maxSize = maxRingSize;
     }
