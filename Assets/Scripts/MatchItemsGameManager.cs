@@ -11,7 +11,7 @@ public class MatchItemsGameManager : GameManager
     [SerializeField] MonoBehaviour holdMiniGameSource;
     [SerializeField] MonoBehaviour tapMiniGameSource;
 
-    IMiniGameMode holdMiniGame, tapMiniGame;
+    IMiniGameMode holdMiniGame, tapMiniGame,currentMinigame;
 
     EventBinding<MiniGameRoundResultEvent> miniGameRoundResultBinding;
 
@@ -93,7 +93,25 @@ public class MatchItemsGameManager : GameManager
 
     void SelectRandomMinigame()
     {
-        holdMiniGame.BeginRound();
+        int randomIndex = UnityEngine.Random.Range(0, 2);
+
+        if(randomIndex == 0)
+        {
+            tapMiniGameSource.gameObject.SetActive(true);
+            currentMinigame = tapMiniGame;
+
+            holdMiniGameSource.gameObject.SetActive(false);
+        }
+        else
+        {
+            holdMiniGameSource.gameObject.SetActive(true);
+            currentMinigame = holdMiniGame;
+
+            tapMiniGameSource.gameObject.SetActive(false);
+        }
+
+        currentMinigame.BeginRound();
+
     }
 
     IEnumerator SelectRandomMinigameDelayed()
@@ -106,16 +124,6 @@ public class MatchItemsGameManager : GameManager
     protected override void OnGameStarted_Hook()
     {
         SelectRandomMinigame();
-    }
-
-    protected override void OnRestart_Hook()
-    {
-        SelectRandomMinigame();
-    }
-
-    protected override void OnGameOver_Hook()
-    {
-        base.OnGameOver_Hook();
     }
 
     IEnumerator TriggerGameOverDelayed()
