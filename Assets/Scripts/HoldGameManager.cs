@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HoldGameManager : GameManager
+public class HoldGameManager : GameManager, IMiniGameMode
 {
     [Header("Hold Game Settings")]
     [SerializeField] private float delayForNextRing = 1.5f;
@@ -79,18 +79,21 @@ public class HoldGameManager : GameManager
 
         float differenceRate = difference / staticRing.transform.localScale.x * 100f;
 
-        Debug.Log(staticRing.transform.localScale.x + " " + dynamicRing.transform.localScale.x + " " + differenceRate);
+        GiveScore(differenceRate);
+    }
 
+    void GiveScore(float differenceRate)
+    {
         if (differenceRate <= 10f)
         {
             AddScore(3);
             EventBus<ShakeEvent>.Publish(new ShakeEvent());
-            EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 3});
+            EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 3 });
             EventBus<PerfectMatchSFXEvent>.Publish(new PerfectMatchSFXEvent());
             ShrinkOnPerfectMatch();
             StartCoroutine(NextRingDelay());
         }
-        else if(differenceRate <= 20f)
+        else if (differenceRate <= 20f)
         {
             AddScore(1);
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 1 });
@@ -110,8 +113,7 @@ public class HoldGameManager : GameManager
 
     void OnRingReleased()
     {
-        dynamicRing.isActive = false;
-        CalculateScore();
+;       EndRound();
     }
 
     void SetStaticRingSize()
@@ -123,6 +125,27 @@ public class HoldGameManager : GameManager
 
     protected override void OnGameStarted_Hook()
     {
+        BeginRound();
+    }
+
+    protected override void OnRestart_Hook()
+    {
+        BeginRound();
+    }
+
+    protected override void OnGameOver_Hook()
+    {
+        base.OnGameOver_Hook();
+    }
+
+    IEnumerator TriggerGameOverDelayed()
+    {
+        yield return new WaitForSeconds(delayForNextRing);
+        TriggerGameOver();
+    }
+
+    public void BeginRound()
+    {
         dynamicRing.isActive = true;
         dynamicRing.ResetSize();
         SetRandomSprite();
@@ -130,18 +153,10 @@ public class HoldGameManager : GameManager
         SetRingColor();
     }
 
-    protected override void OnRestart_Hook()
+    public void EndRound()
     {
-        dynamicRing.isActive = true;
-        dynamicRing.ResetSize();
-        SetRandomSprite();
-        SetRingColor();
-    }
-
-    IEnumerator TriggerGameOverDelayed()
-    {
-        yield return new WaitForSeconds(delayForNextRing);
-        TriggerGameOver();
+        dynamicRing.isActive = false;
+        CalculateScore();
     }
 
     void SetRingColor()
