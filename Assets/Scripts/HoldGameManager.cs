@@ -1,200 +1,200 @@
-﻿using System;
-using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
+﻿//using System;
+//using System.Collections;
+//using UnityEngine;
+//using UnityEngine.UI;
 
-public class HoldGameManager : GameManager, IMiniGameMode
-{
-    [Header("Hold Game Settings")]
-    [SerializeField] private float delayForNextRing = 1.5f;
-    [SerializeField] Vector3 minRingSize, maxRingSize;
+//public class HoldGameManager : GameManager, IMiniGameMode
+//{
+//    [Header("Hold Game Settings")]
+//    [SerializeField] private float delayForNextRing = 1.5f;
+//    [SerializeField] Vector3 minRingSize, maxRingSize;
 
-    [SerializeField]
-    GameObject staticRing;
+//    [SerializeField]
+//    GameObject staticRing;
 
-    [SerializeField]
-    RingVisualController dynamicRing;
+//    [SerializeField]
+//    RingVisualController dynamicRing;
 
-    EventBinding<RingReleasedEvent> ringReleasedBinding;
+//    EventBinding<RingReleasedEvent> ringReleasedBinding;
 
-    [SerializeField] Sprite[] sprites;
+//    [SerializeField] Sprite[] sprites;
 
-    int lastSelectedIndex = -1;
+//    int lastSelectedIndex = -1;
 
-    private void OnEnable()
-    {
-        ringReleasedBinding = new EventBinding<RingReleasedEvent>(OnRingReleased);
-        EventBus<RingReleasedEvent>.Subscribe(ringReleasedBinding);
-    }
+//    private void OnEnable()
+//    {
+//        ringReleasedBinding = new EventBinding<RingReleasedEvent>(OnRingReleased);
+//        EventBus<RingReleasedEvent>.Subscribe(ringReleasedBinding);
+//    }
 
-    private void OnDisable()
-    {
-        EventBus<RingReleasedEvent>.Unsubscribe(ringReleasedBinding);
-    }
+//    private void OnDisable()
+//    {
+//        EventBus<RingReleasedEvent>.Unsubscribe(ringReleasedBinding);
+//    }
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+//    protected override void Awake()
+//    {
+//        base.Awake();
+//    }
 
-    private void Start()
-    {
-        Application.targetFrameRate = 60;
-        QualitySettings.vSyncCount = 0;
+//    private void Start()
+//    {
+//        Application.targetFrameRate = 60;
+//        QualitySettings.vSyncCount = 0;
 
-        dynamicRing.minSize = minRingSize;
-        dynamicRing.maxSize = maxRingSize;
-    }
+//        dynamicRing.minSize = minRingSize;
+//        dynamicRing.maxSize = maxRingSize;
+//    }
 
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-    }
+//    protected override void OnDestroy()
+//    {
+//        base.OnDestroy();
+//    }
 
-    protected override void Update()
-    {
-        base.Update();
+//    protected override void Update()
+//    {
+//        base.Update();
 
-        if (!IsPlaying) return;
-    }
+//        if (!IsPlaying) return;
+//    }
 
-    IEnumerator NextRingDelay()
-    {
-        yield return new WaitForSeconds(delayForNextRing);
+//    IEnumerator NextRingDelay()
+//    {
+//        yield return new WaitForSeconds(delayForNextRing);
 
-        SetStaticRingSize();
+//        SetStaticRingSize();
 
-        dynamicRing.isActive = true;
+//        dynamicRing.isActive = true;
 
-        dynamicRing.ResetSize();
+//        dynamicRing.ResetSize();
 
-        SetRandomSprite();
+//        SetRandomSprite();
 
-        SetRingColor();
-    }
+//        SetRingColor();
+//    }
 
-    void CalculateScore()
-    {
-        float difference = Math.Abs(staticRing.transform.localScale.x - dynamicRing.transform.localScale.x);
+//    void CalculateScore()
+//    {
+//        float difference = Math.Abs(staticRing.transform.localScale.x - dynamicRing.transform.localScale.x);
 
-        float differenceRate = difference / staticRing.transform.localScale.x * 100f;
+//        float differenceRate = difference / staticRing.transform.localScale.x * 100f;
 
-        EvaluateDifference(differenceRate);
-    }
+//        EvaluateDifference(differenceRate);
+//    }
 
-    void EvaluateDifference(float differenceRate)
-    {
-        if (differenceRate <= 10f)
-        {
-            AddScore(3);
-            EventBus<ShakeEvent>.Publish(new ShakeEvent());
-            EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 3 });
-            EventBus<PerfectMatchSFXEvent>.Publish(new PerfectMatchSFXEvent());
-            ShrinkOnPerfectMatch();
-            OnSuccessfulMatch();
-        }
-        else if (differenceRate <= 20f)
-        {
-            AddScore(1);
-            EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 1 });
-            OnSuccessfulMatch();
-        }
-        else
-        {
-            EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 0 });
-            StartCoroutine(TriggerGameOverDelayed());
-        }
-    }
+//    void EvaluateDifference(float differenceRate)
+//    {
+//        if (differenceRate <= 10f)
+//        {
+//            AddScore(3);
+//            EventBus<ShakeEvent>.Publish(new ShakeEvent());
+//            EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 3 });
+//            EventBus<PerfectMatchSFXEvent>.Publish(new PerfectMatchSFXEvent());
+//            ShrinkOnPerfectMatch();
+//            OnSuccessfulMatch();
+//        }
+//        else if (differenceRate <= 20f)
+//        {
+//            AddScore(1);
+//            EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 1 });
+//            OnSuccessfulMatch();
+//        }
+//        else
+//        {
+//            EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 0 });
+//            StartCoroutine(TriggerGameOverDelayed());
+//        }
+//    }
 
-    void ShrinkOnPerfectMatch()
-    {
-        dynamicRing.SetSize(staticRing.transform.localScale);
-    }
+//    void ShrinkOnPerfectMatch()
+//    {
+//        dynamicRing.SetSize(staticRing.transform.localScale);
+//    }
 
-    void OnRingReleased()
-    {
-;       EndRound();
-    }
+//    void OnRingReleased()
+//    {
+//;       EndRound();
+//    }
 
-    void SetStaticRingSize()
-    {
-        float randSize = UnityEngine.Random.Range(minRingSize.x + 0.5f, maxRingSize.x - 0.1f);
+//    void SetStaticRingSize()
+//    {
+//        float randSize = UnityEngine.Random.Range(minRingSize.x + 0.5f, maxRingSize.x - 0.1f);
 
-        staticRing.transform.localScale = new Vector3(randSize, randSize, 1);
-    }
+//        staticRing.transform.localScale = new Vector3(randSize, randSize, 1);
+//    }
 
-    public void OnSuccessfulMatch()
-    {
+//    public void OnSuccessfulMatch()
+//    {
 
-    }
+//    }
 
-    protected override void OnGameStarted_Hook()
-    {
-        BeginRound();
-    }
+//    protected override void OnGameStarted_Hook()
+//    {
+//        BeginRound();
+//    }
 
-    protected override void OnRestart_Hook()
-    {
-        BeginRound();
-    }
+//    protected override void OnRestart_Hook()
+//    {
+//        BeginRound();
+//    }
 
-    protected override void OnGameOver_Hook()
-    {
-        base.OnGameOver_Hook();
-    }
+//    protected override void OnGameOver_Hook()
+//    {
+//        base.OnGameOver_Hook();
+//    }
 
-    IEnumerator TriggerGameOverDelayed()
-    {
-        yield return new WaitForSeconds(delayForNextRing);
-        TriggerGameOver();
-    }
+//    IEnumerator TriggerGameOverDelayed()
+//    {
+//        yield return new WaitForSeconds(delayForNextRing);
+//        TriggerGameOver();
+//    }
 
-    public void BeginRound()
-    {
-        dynamicRing.isActive = true;
-        dynamicRing.ResetSize();
-        SetRandomSprite();
-        SetStaticRingSize();
-        SetRingColor();
-    }
+//    public void BeginRound()
+//    {
+//        dynamicRing.isActive = true;
+//        dynamicRing.ResetSize();
+//        SetRandomSprite();
+//        SetStaticRingSize();
+//        SetRingColor();
+//    }
 
-    public void EndRound()
-    {
-        dynamicRing.isActive = false;
-        CalculateScore();
-    }
+//    public void EndRound()
+//    {
+//        dynamicRing.isActive = false;
+//        CalculateScore();
+//    }
 
-    void SetRingColor()
-    {
-        Image dynamicImage = dynamicRing.GetComponent<Image>();
+//    void SetRingColor()
+//    {
+//        Image dynamicImage = dynamicRing.GetComponent<Image>();
 
-        Color color1 = UnityEngine.Random.ColorHSV(
-            0f, 1f,
-            0.7f, 1f,
-            0.8f, 1f
-        );
+//        Color color1 = UnityEngine.Random.ColorHSV(
+//            0f, 1f,
+//            0.7f, 1f,
+//            0.8f, 1f
+//        );
 
-        dynamicImage.color = color1;
-    }
+//        dynamicImage.color = color1;
+//    }
 
-    void SetRandomSprite()
-    {
-        Image dynamicRingImage = dynamicRing.GetComponent<Image>();
-        Image staticRingImage = staticRing.GetComponent<Image>();
+//    void SetRandomSprite()
+//    {
+//        Image dynamicRingImage = dynamicRing.GetComponent<Image>();
+//        Image staticRingImage = staticRing.GetComponent<Image>();
 
-        int selectedIndex = UnityEngine.Random.Range(0, sprites.Length);
+//        int selectedIndex = UnityEngine.Random.Range(0, sprites.Length);
 
-        if(sprites.Length > 1)
-        {
-            while (selectedIndex == lastSelectedIndex)
-            {
-                selectedIndex = UnityEngine.Random.Range(0, sprites.Length);
-            }
-        }
+//        if(sprites.Length > 1)
+//        {
+//            while (selectedIndex == lastSelectedIndex)
+//            {
+//                selectedIndex = UnityEngine.Random.Range(0, sprites.Length);
+//            }
+//        }
 
-        lastSelectedIndex = selectedIndex;
+//        lastSelectedIndex = selectedIndex;
 
-        dynamicRingImage.sprite = sprites[selectedIndex];
-        staticRingImage.sprite = dynamicRingImage.sprite;
-    }
-}
+//        dynamicRingImage.sprite = sprites[selectedIndex];
+//        staticRingImage.sprite = dynamicRingImage.sprite;
+//    }
+//}

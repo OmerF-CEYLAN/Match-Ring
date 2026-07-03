@@ -233,8 +233,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minRingSize: {x: 2, y: 2, z: 1}
   maxRingSize: {x: 5, y: 5, z: 1}
-  staticRing: {fileID: 1184016630}
-  dynamicRing: {fileID: 1958249452}
+  staticItem: {fileID: 1184016630}
+  dynamicItem: {fileID: 0}
   sprites:
   - {fileID: 21300000, guid: beb2a1f89ddaa3f4bbec91b21150ca36, type: 3}
   - {fileID: 21300000, guid: f1341604e159ca946996fa9c4fe183b8, type: 3}
@@ -709,6 +709,94 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 468375613}
   m_CullTransparentMesh: 1
+--- !u!1 &657333586
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 657333587}
+  - component: {fileID: 657333590}
+  - component: {fileID: 657333589}
+  - component: {fileID: 657333588}
+  m_Layer: 0
+  m_Name: TapItem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &657333587
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657333586}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4376988537787705754}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &657333588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657333586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0.007843138, b: 1, a: 0.39215687}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 486c7ce8fd57b524489869a685474ff8, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &657333589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657333586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33347480822c4934eacb40868ffdd97b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!222 &657333590
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657333586}
+  m_CullTransparentMesh: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -943,7 +1031,7 @@ GameObject:
   - component: {fileID: 1184016634}
   - component: {fileID: 1184016633}
   m_Layer: 0
-  m_Name: staticcircle
+  m_Name: StaticItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1052,8 +1140,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minRingSize: {x: 2, y: 2, z: 1}
   maxRingSize: {x: 5, y: 5, z: 1}
-  staticRing: {fileID: 1184016630}
-  dynamicRing: {fileID: 1958249452}
+  staticItem: {fileID: 1184016630}
+  dynamicItem: {fileID: 1958249452}
   sprites:
   - {fileID: 21300000, guid: beb2a1f89ddaa3f4bbec91b21150ca36, type: 3}
   - {fileID: 21300000, guid: f1341604e159ca946996fa9c4fe183b8, type: 3}
@@ -1590,7 +1678,7 @@ GameObject:
   - component: {fileID: 1958249456}
   - component: {fileID: 1958249455}
   m_Layer: 0
-  m_Name: dynamiccircle
+  m_Name: HoldItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1610,7 +1698,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSize: {x: 0.2, y: 0.2, z: 1}
   maxSize: {x: 0.8, y: 0.8, z: 1}
-  isActive: 0
   cycleSpeed: 2
 --- !u!224 &1958249454
 RectTransform:
@@ -2633,6 +2720,7 @@ RectTransform:
   - {fileID: 4273701588913659463}
   - {fileID: 1184016632}
   - {fileID: 1958249454}
+  - {fileID: 657333587}
   - {fileID: 6578944199621324171}
   - {fileID: 1338108153}
   m_Father: {fileID: 6959592085721222656}
@@ -3508,7 +3596,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   delayForNextRound: 1.5
   holdMiniGameSource: {fileID: 1227748360}
-  tapMiniGameSource: {fileID: 1227748360}
+  tapMiniGameSource: {fileID: 339326036}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

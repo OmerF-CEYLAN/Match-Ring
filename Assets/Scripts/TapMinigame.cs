@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HoldMiniGame : MonoBehaviour, IMiniGameMode
+public class TapMinigame : MonoBehaviour, IMiniGameMode
 {
     [Header("Hold Mini Game Settings")]
     [SerializeField] Vector3 minRingSize, maxRingSize;
@@ -12,11 +12,10 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
     GameObject staticItem;
 
     [SerializeField]
-    RingVisualController dynamicItem;
+    RingMover dynamicItem;
 
     EventBinding<RingReleasedEvent> ringReleasedBinding;
     EventBinding<PerfectMatchEvent> perfectMatchBinding;
-
 
     [SerializeField] Sprite[] sprites;
 
@@ -29,16 +28,12 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
 
         EventBus<RingReleasedEvent>.Subscribe(ringReleasedBinding);
         EventBus<PerfectMatchEvent>.Subscribe(perfectMatchBinding);
-
-        dynamicItem.gameObject?.SetActive(true);
     }
 
     private void OnDisable()
     {
         EventBus<RingReleasedEvent>.Unsubscribe(ringReleasedBinding);
         EventBus<PerfectMatchEvent>.Unsubscribe(perfectMatchBinding);
-
-        dynamicItem.gameObject?.SetActive(false);
     }
 
     private void Start()
@@ -46,8 +41,8 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 0;
 
-        dynamicItem.minSize = minRingSize;
-        dynamicItem.maxSize = maxRingSize;
+        //dynamicItem.minSize = minRingSize;
+        //dynamicItem.maxSize = maxRingSize;
     }
 
     void CalculateScore()
@@ -61,7 +56,7 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
 
     void ShrinkOnPerfectMatch()
     {
-        dynamicItem.SetSize(staticItem.transform.localScale);
+        //dynamicItem.SetSize(staticItem.transform.localScale);
     }
 
     void OnRingReleased()
@@ -83,19 +78,20 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
 
     public void BeginRound()
     {
-        dynamicItem.isActive = true;
-        dynamicItem.ResetSize();
+        //dynamicItem.isActive = true;
+        //dynamicItem.ResetSize();
         SetRandomSprite();
         SetStaticRingSize();
         SetRingColor();
+
+        SendResult(0);
     }
 
     public void EndRound()
     {
-        dynamicItem.isActive = false;
+        //dynamicItem.isActive = false;
         CalculateScore();
     }
-
 
     void SetRingColor()
     {
