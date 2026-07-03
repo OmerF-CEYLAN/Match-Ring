@@ -10,14 +10,14 @@ public class RingVisualController : MonoBehaviour
 
     float sizeT;
 
-    protected void Awake()
+    void OnEnable()
     {
         InputManager.OnHoldStart += HandleHoldStart;
         InputManager.OnHoldEnd += HandleHoldEnd;
         transform.localScale = minSize;
     }
 
-    protected void OnDestroy()
+    void OnDisable()
     {
         InputManager.OnHoldStart -= HandleHoldStart;
         InputManager.OnHoldEnd -= HandleHoldEnd;

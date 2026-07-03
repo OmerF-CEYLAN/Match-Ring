@@ -95,10 +95,18 @@ public struct ShakeEvent : IEvent
 {
 }
 
+public struct MiniGameRoundResultEvent : IEvent
+{
+    public float differenceRate;
+}
+
 public struct AccuricyTextEvent : IEvent
 {
     public int score;
 }
+
+public struct PerfectMatchEvent : IEvent { }
+
 
 public struct PerfectMatchSFXEvent : IEvent
 {

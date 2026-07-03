@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HoldGameManager : GameManager, IMiniGameMode
+public class HoldMiniGame : MonoBehaviour, IMiniGameMode
 {
-    [Header("Hold Game Settings")]
-    [SerializeField] private float delayForNextRing = 1.5f;
+    [Header("Hold Mini Game Settings")]
     [SerializeField] Vector3 minRingSize, maxRingSize;
 
     [SerializeField]
@@ -16,6 +15,8 @@ public class HoldGameManager : GameManager, IMiniGameMode
     RingVisualController dynamicRing;
 
     EventBinding<RingReleasedEvent> ringReleasedBinding;
+    EventBinding<PerfectMatchEvent> perfectMatchBinding;
+
 
     [SerializeField] Sprite[] sprites;
 
@@ -24,17 +25,16 @@ public class HoldGameManager : GameManager, IMiniGameMode
     private void OnEnable()
     {
         ringReleasedBinding = new EventBinding<RingReleasedEvent>(OnRingReleased);
+        perfectMatchBinding = new EventBinding<PerfectMatchEvent>(ShrinkOnPerfectMatch);
+
         EventBus<RingReleasedEvent>.Subscribe(ringReleasedBinding);
+        EventBus<PerfectMatchEvent>.Subscribe(perfectMatchBinding);
     }
 
     private void OnDisable()
     {
         EventBus<RingReleasedEvent>.Unsubscribe(ringReleasedBinding);
-    }
-
-    protected override void Awake()
-    {
-        base.Awake();
+        EventBus<PerfectMatchEvent>.Unsubscribe(perfectMatchBinding);
     }
 
     private void Start()
@@ -46,64 +46,13 @@ public class HoldGameManager : GameManager, IMiniGameMode
         dynamicRing.maxSize = maxRingSize;
     }
 
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-
-        if (!IsPlaying) return;
-    }
-
-    IEnumerator NextRingDelay()
-    {
-        yield return new WaitForSeconds(delayForNextRing);
-
-        SetStaticRingSize();
-
-        dynamicRing.isActive = true;
-
-        dynamicRing.ResetSize();
-
-        SetRandomSprite();
-
-        SetRingColor();
-    }
-
     void CalculateScore()
     {
         float difference = Math.Abs(staticRing.transform.localScale.x - dynamicRing.transform.localScale.x);
 
         float differenceRate = difference / staticRing.transform.localScale.x * 100f;
 
-        EvaluateDifference(differenceRate);
-    }
-
-    void EvaluateDifference(float differenceRate)
-    {
-        if (differenceRate <= 10f)
-        {
-            AddScore(3);
-            EventBus<ShakeEvent>.Publish(new ShakeEvent());
-            EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 3 });
-            EventBus<PerfectMatchSFXEvent>.Publish(new PerfectMatchSFXEvent());
-            ShrinkOnPerfectMatch();
-            OnSuccessfulMatch();
-        }
-        else if (differenceRate <= 20f)
-        {
-            AddScore(1);
-            EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 1 });
-            OnSuccessfulMatch();
-        }
-        else
-        {
-            EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 0 });
-            StartCoroutine(TriggerGameOverDelayed());
-        }
+        SendResult(differenceRate);
     }
 
     void ShrinkOnPerfectMatch()
@@ -113,7 +62,12 @@ public class HoldGameManager : GameManager, IMiniGameMode
 
     void OnRingReleased()
     {
-;       EndRound();
+        EndRound();
+    }
+
+    void SendResult(float differenceRate)
+    {
+        EventBus<MiniGameRoundResultEvent>.Publish(new MiniGameRoundResultEvent { differenceRate = differenceRate });
     }
 
     void SetStaticRingSize()
@@ -121,32 +75,6 @@ public class HoldGameManager : GameManager, IMiniGameMode
         float randSize = UnityEngine.Random.Range(minRingSize.x + 0.5f, maxRingSize.x - 0.1f);
 
         staticRing.transform.localScale = new Vector3(randSize, randSize, 1);
-    }
-
-    public void OnSuccessfulMatch()
-    {
-
-    }
-
-    protected override void OnGameStarted_Hook()
-    {
-        BeginRound();
-    }
-
-    protected override void OnRestart_Hook()
-    {
-        BeginRound();
-    }
-
-    protected override void OnGameOver_Hook()
-    {
-        base.OnGameOver_Hook();
-    }
-
-    IEnumerator TriggerGameOverDelayed()
-    {
-        yield return new WaitForSeconds(delayForNextRing);
-        TriggerGameOver();
     }
 
     public void BeginRound()
@@ -184,7 +112,7 @@ public class HoldGameManager : GameManager, IMiniGameMode
 
         int selectedIndex = UnityEngine.Random.Range(0, sprites.Length);
 
-        if(sprites.Length > 1)
+        if (sprites.Length > 1)
         {
             while (selectedIndex == lastSelectedIndex)
             {
