@@ -90,6 +90,10 @@ public struct RingReleasedEvent : IEvent
 {
     public float ringSize;
 }
+public struct ItemClickedEvent : IEvent
+{
+
+}
 
 public struct ShakeEvent : IEvent
 {

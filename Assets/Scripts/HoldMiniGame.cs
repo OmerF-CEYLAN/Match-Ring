@@ -30,7 +30,8 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
         EventBus<RingReleasedEvent>.Subscribe(ringReleasedBinding);
         EventBus<PerfectMatchEvent>.Subscribe(perfectMatchBinding);
 
-        dynamicItem.gameObject?.SetActive(true);
+        if (dynamicItem != null)
+            dynamicItem.gameObject.SetActive(true);
     }
 
     private void OnDisable()
@@ -38,7 +39,8 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
         EventBus<RingReleasedEvent>.Unsubscribe(ringReleasedBinding);
         EventBus<PerfectMatchEvent>.Unsubscribe(perfectMatchBinding);
 
-        dynamicItem.gameObject?.SetActive(false);
+        if (dynamicItem != null)
+            dynamicItem.gameObject.SetActive(false);
     }
 
     private void Start()

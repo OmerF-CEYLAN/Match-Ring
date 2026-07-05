@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class TapMinigame : MonoBehaviour, IMiniGameMode
 {
     [Header("Hold Mini Game Settings")]
-    [SerializeField] Vector3 minRingSize, maxRingSize;
+    [SerializeField] Vector3 staticItemSize;
 
     [SerializeField]
     GameObject staticItem;
@@ -14,52 +14,61 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
     [SerializeField]
     RingMover dynamicItem;
 
-    EventBinding<RingReleasedEvent> ringReleasedBinding;
+    EventBinding<ItemClickedEvent> itemClickedBinding;
     EventBinding<PerfectMatchEvent> perfectMatchBinding;
 
     [SerializeField] Sprite[] sprites;
 
     int lastSelectedIndex = -1;
 
+    [SerializeField] Transform spawnRight, spawnLeft, spawnTop, spawnBottom;
+
+    [SerializeField] float speed, toleranceRadius;
+
     private void OnEnable()
     {
-        ringReleasedBinding = new EventBinding<RingReleasedEvent>(OnRingReleased);
+        itemClickedBinding = new EventBinding<ItemClickedEvent>(OnItemClicked);
         perfectMatchBinding = new EventBinding<PerfectMatchEvent>(ShrinkOnPerfectMatch);
 
-        EventBus<RingReleasedEvent>.Subscribe(ringReleasedBinding);
+        EventBus<ItemClickedEvent>.Subscribe(itemClickedBinding);
         EventBus<PerfectMatchEvent>.Subscribe(perfectMatchBinding);
+
+        if (dynamicItem != null)
+            dynamicItem.gameObject.SetActive(true);
     }
 
     private void OnDisable()
     {
-        EventBus<RingReleasedEvent>.Unsubscribe(ringReleasedBinding);
+        EventBus<ItemClickedEvent>.Unsubscribe(itemClickedBinding);
         EventBus<PerfectMatchEvent>.Unsubscribe(perfectMatchBinding);
+
+        if (dynamicItem != null)
+            dynamicItem.gameObject.SetActive(false);
     }
 
     private void Start()
     {
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 0;
-
-        //dynamicItem.minSize = minRingSize;
-        //dynamicItem.maxSize = maxRingSize;
     }
 
     void CalculateScore()
     {
-        float difference = Math.Abs(staticItem.transform.localScale.x - dynamicItem.transform.localScale.x);
+        float difference = Vector3.Distance(staticItem.transform.position, dynamicItem.transform.position);
 
-        float differenceRate = difference / staticItem.transform.localScale.x * 100f;
+        float differenceRate = difference / toleranceRadius * 100f;
+
+        Debug.Log(difference +  "   %" + differenceRate);
 
         SendResult(differenceRate);
     }
-
     void ShrinkOnPerfectMatch()
     {
-        //dynamicItem.SetSize(staticItem.transform.localScale);
+        dynamicItem.SetSize(staticItem.transform.localScale);
+        dynamicItem.SetPosition(staticItem.transform.position);
     }
 
-    void OnRingReleased()
+    void OnItemClicked()
     {
         EndRound();
     }
@@ -69,27 +78,51 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
         EventBus<MiniGameRoundResultEvent>.Publish(new MiniGameRoundResultEvent { differenceRate = differenceRate });
     }
 
-    void SetStaticRingSize()
+    void SetItemSizes()
     {
-        float randSize = UnityEngine.Random.Range(minRingSize.x + 0.5f, maxRingSize.x - 0.1f);
-
-        staticItem.transform.localScale = new Vector3(randSize, randSize, 1);
+        staticItem.transform.localScale = staticItemSize;
+        dynamicItem.SetSize(staticItemSize);
     }
 
     public void BeginRound()
     {
-        //dynamicItem.isActive = true;
-        //dynamicItem.ResetSize();
+        dynamicItem.isActive = true;
+        dynamicItem.ResetMovement();
         SetRandomSprite();
-        SetStaticRingSize();
+        SetItemSizes();
         SetRingColor();
 
-        SendResult(0);
+        Transform a, b;
+        if (UnityEngine.Random.Range(0, 2) == 0)
+        {
+            a = spawnLeft;
+            b = spawnRight;
+        }
+        else
+        {
+            a = spawnTop;
+            b = spawnBottom;
+        }
+
+        Vector3 pointA, pointB;
+        if (UnityEngine.Random.Range(0, 2) == 0)
+        {
+            pointA = a.position;
+            pointB = b.position;
+        }
+        else
+        {
+            pointA = b.position;
+            pointB = a.position;
+        }
+
+        staticItem.transform.position = Vector3.Lerp(pointA, pointB, 0.5f);
+        dynamicItem.StartMoving(pointA, pointB,speed);
     }
 
     public void EndRound()
     {
-        //dynamicItem.isActive = false;
+        dynamicItem.isActive = false;
         CalculateScore();
     }
 
