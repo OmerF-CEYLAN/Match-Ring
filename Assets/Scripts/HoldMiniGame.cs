@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Diagnostics.SymbolStore;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,9 +18,8 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
     EventBinding<RingReleasedEvent> ringReleasedBinding;
     EventBinding<PerfectMatchEvent> perfectMatchBinding;
 
-    [SerializeField] Sprite[] sprites;
-
-    int lastSelectedIndex = -1;
+    [SerializeField] MonoBehaviour symbolRepositorySource;
+    ISymbolReader symbolReader;
 
     [SerializeField] float initialSpeed, speed,speedUpRate;
 
@@ -47,6 +47,8 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
 
     private void Start()
     {
+        symbolReader = symbolRepositorySource as ISymbolReader;
+
         dynamicItem.minSize = minRingSize;
         dynamicItem.maxSize = maxRingSize;
     }
@@ -129,19 +131,9 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
         Image dynamicRingImage = dynamicItem.GetComponent<Image>();
         Image staticRingImage = staticItem.GetComponent<Image>();
 
-        int selectedIndex = UnityEngine.Random.Range(0, sprites.Length);
+        Sprite selectedSprite = symbolReader.GetRandomSprite();
 
-        if (sprites.Length > 1)
-        {
-            while (selectedIndex == lastSelectedIndex)
-            {
-                selectedIndex = UnityEngine.Random.Range(0, sprites.Length);
-            }
-        }
-
-        lastSelectedIndex = selectedIndex;
-
-        dynamicRingImage.sprite = sprites[selectedIndex];
+        dynamicRingImage.sprite = selectedSprite;
         staticRingImage.sprite = dynamicRingImage.sprite;
     }
 }

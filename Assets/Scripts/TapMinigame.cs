@@ -17,9 +17,8 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
     EventBinding<ItemClickedEvent> itemClickedBinding;
     EventBinding<PerfectMatchEvent> perfectMatchBinding;
 
-    [SerializeField] Sprite[] sprites;
-
-    int lastSelectedIndex = -1;
+    [SerializeField] MonoBehaviour symbolRepositorySource;
+    ISymbolReader symbolReader;
 
     [SerializeField] Transform spawnRight, spawnLeft, spawnTop, spawnBottom;
 
@@ -45,6 +44,11 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
 
         if (dynamicItem != null)
             dynamicItem.gameObject.SetActive(false);
+    }
+
+    private void Start()
+    {
+        symbolReader = symbolRepositorySource as ISymbolReader;
     }
 
     void CalculateScore()
@@ -152,19 +156,9 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
         Image dynamicRingImage = dynamicItem.GetComponent<Image>();
         Image staticRingImage = staticItem.GetComponent<Image>();
 
-        int selectedIndex = UnityEngine.Random.Range(0, sprites.Length);
+        Sprite selectedSprite = symbolReader.GetRandomSprite();
 
-        if (sprites.Length > 1)
-        {
-            while (selectedIndex == lastSelectedIndex)
-            {
-                selectedIndex = UnityEngine.Random.Range(0, sprites.Length);
-            }
-        }
-
-        lastSelectedIndex = selectedIndex;
-
-        dynamicRingImage.sprite = sprites[selectedIndex];
+        dynamicRingImage.sprite = selectedSprite;
         staticRingImage.sprite = dynamicRingImage.sprite;
     }
 }
