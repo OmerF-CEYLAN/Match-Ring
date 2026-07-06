@@ -196,8 +196,7 @@ public class GameUI : MonoBehaviour
     // ───────────────────────────────────────────────────
     private void OnRestartClicked()
     {
-        // GameStartedEvent will fire and HandleGameStarted() will
-        // switch panels automatically — no manual panel work needed here.
+        UIClickGuard.LastUIClickTime = Time.unscaledTime;
         GameManager.Instance?.RestartGame();
     }
 

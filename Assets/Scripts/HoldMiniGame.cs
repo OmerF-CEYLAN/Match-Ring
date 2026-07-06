@@ -45,9 +45,6 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
-        QualitySettings.vSyncCount = 0;
-
         dynamicItem.minSize = minRingSize;
         dynamicItem.maxSize = maxRingSize;
     }

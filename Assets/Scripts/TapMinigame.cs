@@ -46,12 +46,6 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
             dynamicItem.gameObject.SetActive(false);
     }
 
-    private void Start()
-    {
-        Application.targetFrameRate = 60;
-        QualitySettings.vSyncCount = 0;
-    }
-
     void CalculateScore()
     {
         float difference = Vector3.Distance(staticItem.transform.position, dynamicItem.transform.position);

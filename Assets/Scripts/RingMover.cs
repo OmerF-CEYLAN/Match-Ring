@@ -63,8 +63,10 @@ public class RingMover : MonoBehaviour
     private void HandleOnTap()
     {
         if (!isActive) return;
-        if (Time.time - roundStartTime < 0.2f) return;
+        if (Time.unscaledTime - UIClickGuard.LastUIClickTime < 0.15f) return;
         EventBus<ItemClickedEvent>.Publish(new ItemClickedEvent());
         isItemMoving = false;
     }
+
+
 }

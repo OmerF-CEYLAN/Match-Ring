@@ -7,6 +7,11 @@
 
 using UnityEngine;
 
+public static class UIClickGuard
+{
+    public static float LastUIClickTime = -10f;
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }

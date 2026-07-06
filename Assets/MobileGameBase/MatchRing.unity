@@ -577,7 +577,7 @@ MonoBehaviour:
   spawnTop: {fileID: 1671282635}
   spawnBottom: {fileID: 989670891}
   speed: 0.5
-  toleranceRadius: 200
+  toleranceRadius: 250
 --- !u!1 &468375613
 GameObject:
   m_ObjectHideFlags: 0
