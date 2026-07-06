@@ -24,6 +24,7 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
     [SerializeField] Transform spawnRight, spawnLeft, spawnTop, spawnBottom;
 
     [SerializeField] float initialSpeed, speed, speedUpRate, toleranceRadius;
+    [SerializeField] float toleranceFraction = 0.1f;
 
     private void OnEnable()
     {
@@ -49,13 +50,10 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
     void CalculateScore()
     {
         float difference = Vector3.Distance(staticItem.transform.position, dynamicItem.transform.position);
-
         float differenceRate = difference / toleranceRadius * 100f;
-
-        Debug.Log(difference +  "   %" + differenceRate);
-
         SendResult(differenceRate);
     }
+
     void ShrinkOnPerfectMatch()
     {
         dynamicItem.SetSize(staticItem.transform.localScale);
@@ -113,6 +111,8 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
 
         staticItem.transform.position = Vector3.Lerp(pointA, pointB, 0.5f);
         dynamicItem.StartMoving(pointA, pointB);
+
+        toleranceRadius = Vector3.Distance(pointA, pointB) * toleranceFraction;
     }
 
     public void EndRound()

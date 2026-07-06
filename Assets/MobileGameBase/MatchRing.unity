@@ -640,6 +640,7 @@ MonoBehaviour:
   speed: 0.3
   speedUpRate: 0.02
   toleranceRadius: 250
+  toleranceFraction: 0.3
 --- !u!1 &468375613
 GameObject:
   m_ObjectHideFlags: 0
