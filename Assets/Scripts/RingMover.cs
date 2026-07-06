@@ -23,9 +23,8 @@ public class RingMover : MonoBehaviour
         if (isItemMoving && isActive)
             HandleMoving();
     }
-    public void StartMoving(Vector3 from, Vector3 to,float speed)
+    public void StartMoving(Vector3 from, Vector3 to)
     {
-        moveSpeed = speed;
         startPoint = from;
         endPoint = to;
         positionT = 0f;
@@ -48,6 +47,12 @@ public class RingMover : MonoBehaviour
         }
         transform.position = Vector3.LerpUnclamped(startPoint, endPoint, Mathf.SmoothStep(0f, 1f, positionT));
     }
+
+    public void SetSpeed(float speed)
+    {
+        moveSpeed = speed;
+    }
+
     public void ResetMovement()
     {
         isItemMoving = true;

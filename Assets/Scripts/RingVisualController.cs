@@ -58,6 +58,11 @@ public class RingVisualController : MonoBehaviour
     {
         transform.localScale = size;
     }
+    
+    public void SetSpeed(float speed)
+    {
+        cycleSpeed = speed;
+    }
 
     private void HandleHoldStart()
     {

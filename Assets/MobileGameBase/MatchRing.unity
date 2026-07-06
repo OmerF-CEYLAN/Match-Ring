@@ -636,7 +636,9 @@ MonoBehaviour:
   spawnLeft: {fileID: 963673531}
   spawnTop: {fileID: 1671282635}
   spawnBottom: {fileID: 989670891}
-  speed: 0.5
+  initialSpeed: 0.3
+  speed: 0.3
+  speedUpRate: 0.02
   toleranceRadius: 250
 --- !u!1 &468375613
 GameObject:
@@ -1617,6 +1619,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: f09fb0a2992f1724eb992f8b9393982c, type: 3}
   - {fileID: 21300000, guid: 496cbc335a227c649b7b99f27117878d, type: 3}
   - {fileID: 21300000, guid: ed56017900ecf00479abf2ac1de38fa4, type: 3}
+  initialSpeed: 2
+  speed: 1.5
+  speedUpRate: 0.1
 --- !u!1 &1338108152
 GameObject:
   m_ObjectHideFlags: 0
@@ -3793,6 +3798,7 @@ GameObject:
   - component: {fileID: 5913830687937564098}
   - component: {fileID: 9090951479376863179}
   - component: {fileID: 9090951479376863180}
+  - component: {fileID: 9090951479376863181}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -3847,6 +3853,19 @@ MonoBehaviour:
   delayForNextRound: 1.5
   holdMiniGameSource: {fileID: 1227748360}
   tapMiniGameSource: {fileID: 339326036}
+--- !u!114 &9090951479376863181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8892074516298571637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc7da20bebdec5042b33444aa7cef217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  difficultyIncreaseInterval: 3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

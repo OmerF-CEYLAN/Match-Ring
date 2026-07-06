@@ -17,10 +17,12 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
     EventBinding<RingReleasedEvent> ringReleasedBinding;
     EventBinding<PerfectMatchEvent> perfectMatchBinding;
 
-
     [SerializeField] Sprite[] sprites;
 
     int lastSelectedIndex = -1;
+
+    [SerializeField] float initialSpeed, speed,speedUpRate;
+
 
     private void OnEnable()
     {
@@ -84,6 +86,7 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
     {
         dynamicItem.isActive = true;
         dynamicItem.ResetSize();
+        dynamicItem.SetSpeed(initialSpeed + DifficultyManager.Instance.DifficultyLevel * speedUpRate);
         SetRandomSprite();
         SetStaticRingSize();
         SetRingColor();

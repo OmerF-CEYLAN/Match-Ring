@@ -83,6 +83,7 @@ public class MatchItemsGameManager : GameManager
 
     public void OnSuccessfulMatch()
     {
+        EventBus<SuccessfulMatchEvent>.Publish(new SuccessfulMatchEvent());
         StartCoroutine(SelectRandomMinigameDelayed());
     }
 

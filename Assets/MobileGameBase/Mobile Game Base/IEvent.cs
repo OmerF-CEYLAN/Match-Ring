@@ -115,3 +115,10 @@ public struct PerfectMatchEvent : IEvent { }
 public struct PerfectMatchSFXEvent : IEvent
 {
 }
+public struct IncreaseDifficultyEvent : IEvent
+{
+}
+
+public struct SuccessfulMatchEvent : IEvent
+{
+}

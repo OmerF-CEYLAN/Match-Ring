@@ -23,7 +23,7 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
 
     [SerializeField] Transform spawnRight, spawnLeft, spawnTop, spawnBottom;
 
-    [SerializeField] float speed, toleranceRadius;
+    [SerializeField] float initialSpeed, speed, speedUpRate, toleranceRadius;
 
     private void OnEnable()
     {
@@ -82,6 +82,7 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
     {
         dynamicItem.isActive = true;
         dynamicItem.ResetMovement();
+        dynamicItem.SetSpeed(initialSpeed + DifficultyManager.Instance.DifficultyLevel * speedUpRate);
         SetRandomSprite();
         SetItemSizes();
         SetRingColor();
@@ -111,7 +112,7 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
         }
 
         staticItem.transform.position = Vector3.Lerp(pointA, pointB, 0.5f);
-        dynamicItem.StartMoving(pointA, pointB,speed);
+        dynamicItem.StartMoving(pointA, pointB);
     }
 
     public void EndRound()
