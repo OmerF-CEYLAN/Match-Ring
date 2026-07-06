@@ -3748,6 +3748,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rect: {fileID: 4376988537787705754}
+  shakeScale: 0.2
+  shakeElasticity: 0.8
 --- !u!222 &8830283161320478388
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -6,6 +6,9 @@ public class UIShake : MonoBehaviour
     [SerializeField]
     RectTransform rect;
 
+    [SerializeField]
+    float shakeScale,shakeElasticity;
+
     EventBinding<ShakeEvent> shakeEventBinding;
 
     private void OnEnable()
@@ -22,10 +25,10 @@ public class UIShake : MonoBehaviour
     void OnShake()
     {
         rect.DOPunchScale(
-    Vector3.one * 0.08f, // %8 büyüsün
+    Vector3.one * shakeScale, // %8 büyüsün
     0.2f,                // süre
     8,                   // titreþim sayýsý
-    0.8f                 // elastiklik
+    shakeElasticity                 // elastiklik
 );
     }
 }

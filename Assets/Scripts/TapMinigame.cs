@@ -56,8 +56,20 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
 
     void ShrinkOnPerfectMatch()
     {
+        HideStaticItem(true);
+
         dynamicItem.SetSize(staticItem.transform.localScale);
         dynamicItem.SetPosition(staticItem.transform.position);
+    }
+
+    void HideStaticItem(bool hide)
+    {
+        Image staticItemImage = staticItem.GetComponent<Image>();
+
+        Color color1 = staticItemImage.color;
+        color1.a = hide ? 0 : 1;
+
+        staticItemImage.color = color1;
     }
 
     void OnItemClicked()
@@ -78,6 +90,7 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
 
     public void BeginRound()
     {
+        HideStaticItem(false);
         dynamicItem.isActive = true;
         dynamicItem.ResetMovement();
         dynamicItem.SetSpeed(initialSpeed + DifficultyManager.Instance.DifficultyLevel * speedUpRate);

@@ -62,7 +62,18 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
 
     void ShrinkOnPerfectMatch()
     {
+        HideStaticItem(true);
         dynamicItem.SetSize(staticItem.transform.localScale);
+    }
+
+    void HideStaticItem(bool hide)
+    {
+        Image staticItemImage = staticItem.GetComponent<Image>();
+
+        Color color1 = staticItemImage.color;
+        color1.a = hide ? 0 : 1;
+
+        staticItemImage.color = color1;
     }
 
     void OnRingReleased()
@@ -84,6 +95,7 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
 
     public void BeginRound()
     {
+        HideStaticItem(false);
         dynamicItem.isActive = true;
         dynamicItem.ResetSize();
         dynamicItem.SetSpeed(initialSpeed + DifficultyManager.Instance.DifficultyLevel * speedUpRate);

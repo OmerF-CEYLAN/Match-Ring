@@ -1,10 +1,3 @@
-// ═══════════════════════════════════════════════════════
-//  AudioManager.cs  —  REUSABLE. NEVER MODIFY.
-//  Subscribes to game state and audio events via EventBus.
-//  Any script can trigger audio without an AudioManager
-//  reference by publishing PlaySFXEvent or PlayMusicEvent.
-// ═══════════════════════════════════════════════════════
-
 using System.Collections;
 using UnityEngine;
 
