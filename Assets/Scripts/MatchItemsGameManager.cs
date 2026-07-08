@@ -54,6 +54,7 @@ public class MatchItemsGameManager : GameManager
 
     void GetDifferenceRate(MiniGameRoundResultEvent e)
     {
+        if (TutorialManager.Instance != null && TutorialManager.Instance.IsActive) return;
         EvaluateDifference(e.differenceRate);
     }
 
@@ -124,7 +125,10 @@ public class MatchItemsGameManager : GameManager
 
     protected override void OnGameStarted_Hook()
     {
-        SelectRandomMinigame();
+        if (TutorialManager.Instance != null && !TutorialManager.IsTutorialCompleted)
+            TutorialManager.Instance.StartTutorial(SelectRandomMinigame);
+        else
+            SelectRandomMinigame();
     }
 
     IEnumerator TriggerGameOverDelayed()
