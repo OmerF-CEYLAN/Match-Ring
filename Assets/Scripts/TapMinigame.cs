@@ -67,8 +67,14 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
 
         bool isItemUnlocked = CollectionSaveManager.Instance.IsUnlocked(symbolReader.GetLastSelectedIndex());
 
-        if(isItemUnlocked == false)
-            CollectionSaveManager.Instance.Unlock(symbolReader.GetLastSelectedIndex());
+        if (!isItemUnlocked)
+        {
+            Color color = dynamicItem.GetComponent<Image>().color;
+
+            CollectionSaveManager.Instance.Unlock(
+                symbolReader.GetLastSelectedIndex(),
+                color);
+        }
     }
 
     void ShrinkOnPerfectMatch()

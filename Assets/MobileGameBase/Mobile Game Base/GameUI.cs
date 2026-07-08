@@ -105,7 +105,6 @@ public class GameUI : MonoBehaviour
     void OpenCollection()
     {
         collectionManager.RefreshAll();
-
         collectionPanel.SetActive(true);
     }
 

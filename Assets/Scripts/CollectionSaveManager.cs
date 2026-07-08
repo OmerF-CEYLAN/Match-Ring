@@ -8,11 +8,17 @@ public class CollectionSaveManager : MonoBehaviour
     const string SaveKey = "CollectionSave";
 
     [Serializable]
-    class SaveData
+    public class CollectionItemData
     {
-        public bool[] unlocked;
+        public bool unlocked;
+        public Color color;
     }
 
+    [Serializable]
+    class SaveData
+    {
+        public CollectionItemData[] items;
+    }
     SaveData saveData;
 
     void Awake()
@@ -31,31 +37,50 @@ public class CollectionSaveManager : MonoBehaviour
 
     public void Initialize(int itemCount)
     {
-        if (saveData.unlocked == null || saveData.unlocked.Length != itemCount)
+        if (saveData.items == null || saveData.items.Length != itemCount)
         {
-            saveData.unlocked = new bool[itemCount];
+            saveData.items = new CollectionItemData[itemCount];
+
+            for (int i = 0; i < itemCount; i++)
+            {
+                saveData.items[i] = new CollectionItemData
+                {
+                    unlocked = false,
+                    color = Color.white
+                };
+            }
+
             Save();
         }
     }
 
     public bool IsUnlocked(int index)
     {
-        if (index < 0 || index >= saveData.unlocked.Length)
+        if (index < 0 || index >= saveData.items.Length)
             return false;
 
-        return saveData.unlocked[index];
+        return saveData.items[index].unlocked;
     }
 
-    public void Unlock(int index)
+    public void Unlock(int index, Color color)
     {
-        if (index < 0 || index >= saveData.unlocked.Length)
+        if (index < 0 || index >= saveData.items.Length)
             return;
 
-        if (saveData.unlocked[index])
+        if (saveData.items[index].unlocked)
             return;
 
-        saveData.unlocked[index] = true;
+        saveData.items[index].unlocked = true;
+        saveData.items[index].color = color;
+
         Save();
+    }
+    public Color GetColor(int index)
+    {
+        if (index < 0 || index >= saveData.items.Length)
+            return Color.white;
+
+        return saveData.items[index].color;
     }
 
     void Save()

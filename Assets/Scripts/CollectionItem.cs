@@ -34,8 +34,14 @@ public class CollectionItem : MonoBehaviour
     public void Refresh()
     {
         if (CollectionSaveManager.Instance.IsUnlocked(index))
+        {
             UnlockItem();
+            itemImage.color = CollectionSaveManager.Instance.GetColor(index);
+        }
         else
+        {
             LockItem();
+            itemImage.color = Color.white;
+        }
     }
 }
