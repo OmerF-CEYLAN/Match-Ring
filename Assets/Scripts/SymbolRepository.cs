@@ -3,7 +3,9 @@ using UnityEngine;
 public interface ISymbolReader
 {
     public Sprite GetRandomSprite();
+    public Sprite[] GetAllSprites();
 
+    public int GetLastSelectedIndex();
 }
 
 public class SymbolRepository : MonoBehaviour,ISymbolReader
@@ -27,5 +29,15 @@ public class SymbolRepository : MonoBehaviour,ISymbolReader
         lastSelectedIndex = selectedIndex;
 
         return sprites[selectedIndex];
+    }
+
+    public Sprite[] GetAllSprites()
+    {
+        return sprites;
+    }
+
+    public int GetLastSelectedIndex()
+    {
+        return lastSelectedIndex;
     }
 }

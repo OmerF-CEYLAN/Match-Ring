@@ -37,6 +37,12 @@ public class GameUI : MonoBehaviour
     [Header("Buttons")]
     [SerializeField] private Button restartButton;
 
+    [Header("Item Colleciton")]
+    [SerializeField] GameObject collectionPanel;
+    [SerializeField] Button collectionButton;
+    [SerializeField] Button closeCollectionButton;
+    [SerializeField] CollectionManager collectionManager;
+
     // ───────────────────────────────────────────────────
     //  Internal state
     // ───────────────────────────────────────────────────
@@ -83,6 +89,8 @@ public class GameUI : MonoBehaviour
     private void Start()
     {
         restartButton?.onClick.AddListener(OnRestartClicked);
+        collectionButton.onClick.AddListener(OpenCollection);
+        closeCollectionButton.onClick.AddListener(CloseCollection);
 
         // Seed the cached high score from GameManager if available,
         // otherwise it will be updated by the first NewHighScoreEvent.
@@ -92,6 +100,18 @@ public class GameUI : MonoBehaviour
         ShowIdle();
         PlayAnimation(titleText);
         PlayAnimation(restartText);
+    }
+
+    void OpenCollection()
+    {
+        collectionManager.RefreshAll();
+
+        collectionPanel.SetActive(true);
+    }
+
+    void CloseCollection()
+    {
+        collectionPanel.SetActive(false);
     }
 
     // ───────────────────────────────────────────────────

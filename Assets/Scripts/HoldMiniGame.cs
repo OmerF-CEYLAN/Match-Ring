@@ -27,7 +27,7 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
     private void OnEnable()
     {
         ringReleasedBinding = new EventBinding<RingReleasedEvent>(OnRingReleased);
-        perfectMatchBinding = new EventBinding<PerfectMatchEvent>(ShrinkOnPerfectMatch);
+        perfectMatchBinding = new EventBinding<PerfectMatchEvent>(HandlePerfectMatch);
 
         EventBus<RingReleasedEvent>.Subscribe(ringReleasedBinding);
         EventBus<PerfectMatchEvent>.Subscribe(perfectMatchBinding);
@@ -60,6 +60,19 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
         float differenceRate = difference / staticItem.transform.localScale.x * 100f;
 
         SendResult(differenceRate);
+    }
+
+    void HandlePerfectMatch()
+    {
+        ShrinkOnPerfectMatch();
+
+        if (TutorialManager.Instance.IsActive)
+            return;
+
+        bool isItemUnlocked = CollectionSaveManager.Instance.IsUnlocked(symbolReader.GetLastSelectedIndex());
+
+        if (isItemUnlocked == false)
+            CollectionSaveManager.Instance.Unlock(symbolReader.GetLastSelectedIndex());
     }
 
     void ShrinkOnPerfectMatch()

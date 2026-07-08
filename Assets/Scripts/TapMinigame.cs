@@ -28,7 +28,7 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
     private void OnEnable()
     {
         itemClickedBinding = new EventBinding<ItemClickedEvent>(OnItemClicked);
-        perfectMatchBinding = new EventBinding<PerfectMatchEvent>(ShrinkOnPerfectMatch);
+        perfectMatchBinding = new EventBinding<PerfectMatchEvent>(HandlePerfectMatch);
 
         EventBus<ItemClickedEvent>.Subscribe(itemClickedBinding);
         EventBus<PerfectMatchEvent>.Subscribe(perfectMatchBinding);
@@ -56,6 +56,19 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
         float difference = Vector3.Distance(staticItem.transform.position, dynamicItem.transform.position);
         float differenceRate = difference / toleranceRadius * 100f;
         SendResult(differenceRate);
+    }
+
+    void HandlePerfectMatch()
+    {
+        ShrinkOnPerfectMatch();
+
+        if (TutorialManager.Instance.IsActive)
+            return;
+
+        bool isItemUnlocked = CollectionSaveManager.Instance.IsUnlocked(symbolReader.GetLastSelectedIndex());
+
+        if(isItemUnlocked == false)
+            CollectionSaveManager.Instance.Unlock(symbolReader.GetLastSelectedIndex());
     }
 
     void ShrinkOnPerfectMatch()
