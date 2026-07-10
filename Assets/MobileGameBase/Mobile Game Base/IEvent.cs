@@ -122,3 +122,12 @@ public struct IncreaseDifficultyEvent : IEvent
 public struct SuccessfulMatchEvent : IEvent
 {
 }
+
+public struct ComboIncreasedEvent : IEvent
+{
+    public int combo;
+}
+
+public struct ComboFinishedEvent : IEvent
+{
+}

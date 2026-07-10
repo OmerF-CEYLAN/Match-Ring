@@ -13,6 +13,8 @@ public class MatchItemsGameManager : GameManager
 
     IMiniGameMode holdMiniGame, tapMiniGame,currentMinigame;
 
+    [SerializeField] ComboManager comboManager;
+
     EventBinding<MiniGameRoundResultEvent> miniGameRoundResultBinding;
 
     private void OnEnable()
@@ -62,24 +64,33 @@ public class MatchItemsGameManager : GameManager
     {
         if (differenceRate <= 10f)
         {
-            AddScore(3);
             EventBus<ShakeEvent>.Publish(new ShakeEvent());
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 3 });
             EventBus<PerfectMatchSFXEvent>.Publish(new PerfectMatchSFXEvent());
             OnSuccessfulMatch();
             PerfectMatch();
+            AddScoreWithComboMultiplier(3);
         }
         else if (differenceRate <= 20f)
         {
-            AddScore(1);
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 1 });
+            EventBus<ComboFinishedEvent>.Publish(new ComboFinishedEvent());
             OnSuccessfulMatch();
+            AddScore(1);
         }
         else
         {
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 0 });
+            EventBus<ComboFinishedEvent>.Publish(new ComboFinishedEvent());
             StartCoroutine(TriggerGameOverDelayed());
         }
+    }
+
+    public void AddScoreWithComboMultiplier(int score)
+    {
+        Debug.Log(comboManager.GetComboMultiplier());
+        int combo = comboManager.GetComboMultiplier();
+        AddScore(score * combo);
     }
 
     public void OnSuccessfulMatch()

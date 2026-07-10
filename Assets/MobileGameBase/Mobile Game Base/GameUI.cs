@@ -23,6 +23,7 @@ public class GameUI : MonoBehaviour
     [Header("HUD")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI accuricyText;
+    [SerializeField] private TextMeshProUGUI comboText;
 
     [Header("Game Over Screen")]
     [SerializeField] private TextMeshProUGUI gameOverScoreText;
@@ -56,6 +57,8 @@ public class GameUI : MonoBehaviour
     private EventBinding<ScoreChangedEvent> scoreChangedBinding;
     private EventBinding<NewHighScoreEvent> newHighScoreBinding;
     private EventBinding<AccuricyTextEvent> accuricyTextBinding;
+    private EventBinding<ComboIncreasedEvent> comboIncreasedBinding;
+    private EventBinding<ComboFinishedEvent> comboFinishedBinding;
 
     private int displayedScore;
 
@@ -69,12 +72,16 @@ public class GameUI : MonoBehaviour
         scoreChangedBinding = new EventBinding<ScoreChangedEvent>(HandleScoreChanged);
         newHighScoreBinding = new EventBinding<NewHighScoreEvent>(HandleNewHighScore);
         accuricyTextBinding = new EventBinding<AccuricyTextEvent>(HandleAccuricyText);
+        comboIncreasedBinding = new EventBinding<ComboIncreasedEvent>(HandleComboIncreased);
+        comboFinishedBinding = new EventBinding<ComboFinishedEvent>(HandleComboFinished);
 
         EventBus<GameStartedEvent>.Subscribe(gameStartedBinding);
         EventBus<GameOverEvent>.Subscribe(gameOverBinding);
         EventBus<ScoreChangedEvent>.Subscribe(scoreChangedBinding);
         EventBus<NewHighScoreEvent>.Subscribe(newHighScoreBinding);
         EventBus<AccuricyTextEvent>.Subscribe(accuricyTextBinding);
+        EventBus<ComboIncreasedEvent>.Subscribe(comboIncreasedBinding);
+        EventBus<ComboFinishedEvent>.Subscribe(comboFinishedBinding);
     }
 
     private void OnDisable()
@@ -126,6 +133,9 @@ public class GameUI : MonoBehaviour
         hudPanel?.SetActive(true);
         newRecordObject?.SetActive(false);
         SetText(scoreText, "0");
+        comboText.DOKill();
+        comboText.gameObject.SetActive(false);
+        comboText.rectTransform.localScale = Vector3.one;
     }
 
     private void HandleGameOver(GameOverEvent e)
@@ -138,6 +148,45 @@ public class GameUI : MonoBehaviour
 
         SetText(gameOverScoreText, Mathf.FloorToInt(e.finalScore).ToString());
         SetText(gameOverHighScoreText, e.highScore.ToString());
+    }
+    void HandleComboIncreased(ComboIncreasedEvent e)
+    {
+        if (e.combo < 2)
+            return;
+
+        comboText.gameObject.SetActive(true);
+        comboText.text = $"x{e.combo}";
+
+        comboText.DOKill();
+        comboText.rectTransform.DOKill();
+
+        comboText.color = Color.white;
+        comboText.rectTransform.localScale = Vector3.one;
+
+        comboText.rectTransform
+            .DOScale(1.4f, 0.08f)
+            .SetLoops(2, LoopType.Yoyo)
+            .SetEase(Ease.OutBack);
+
+        comboText
+            .DOColor(Color.yellow, 0.08f)
+            .SetLoops(2, LoopType.Yoyo);
+    }
+
+    void HandleComboFinished()
+    {
+        comboText.DOKill();
+        comboText.rectTransform.DOKill();
+
+        comboText
+            .DOFade(0f, 0.15f)
+            .OnComplete(() =>
+            {
+                comboText.gameObject.SetActive(false);
+                comboText.alpha = 1f;
+                comboText.color = Color.white;
+                comboText.rectTransform.localScale = Vector3.one;
+            });
     }
 
     private void HandleScoreChanged(ScoreChangedEvent e)
