@@ -1,39 +1,23 @@
-//  InputManager.cs  —  REUSABLE. NEVER MODIFY.
-//  Drop onto the same GameObject as GameManager.
-//  Subscribe to events from any gameplay script via
-//  static events (InputManager.OnTap) OR via EventBus<TapEvent>.
-
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class InputManager : MonoBehaviour
 {
-    // ───────────────────────────────────────────────────
-    //  Singleton
-    // ───────────────────────────────────────────────────
     public static InputManager Instance { get; private set; }
 
-    // ───────────────────────────────────────────────────
-    //  Inspector Settings
-    // ───────────────────────────────────────────────────
     [Header("Swipe")]
-    [Tooltip("Minimum swipe distance as a fraction of screen width (0.05 = 5%).")]
     [SerializeField, Range(0.02f, 0.3f)] private float swipeThreshold = 0.07f;
 
     [Header("Double Tap")]
-    [Tooltip("Max seconds between two taps to register as a double tap.")]
     [SerializeField, Range(0.1f, 0.6f)] private float doubleTapWindow = 0.25f;
 
     [Header("Hold")]
-    [Tooltip("How long the finger must stay still to register as a hold.")]
     [SerializeField, Range(0.2f, 1.5f)] private float holdThreshold = 0.4f;
-
-    [Tooltip("Max movement (% of screen) allowed while holding.")]
     [SerializeField, Range(0.01f, 0.1f)] private float holdMoveTolerance = 0.02f;
 
-    // ───────────────────────────────────────────────────
-    //  Static Events — subscribe from any script
-    // ───────────────────────────────────────────────────
     public static event Action OnTap;
     public static event Action OnDoubleTap;
     public static event Action OnHoldStart;
@@ -44,24 +28,18 @@ public class InputManager : MonoBehaviour
     public static event Action OnSwipeUp;
     public static event Action OnSwipeDown;
 
-    // ───────────────────────────────────────────────────
-    //  Public State (read-only)
-    // ───────────────────────────────────────────────────
     public bool IsHolding { get; private set; }
     public SwipeDirection LastSwipeDirection { get; private set; }
     public Vector2 TouchStartPosition { get; private set; }
 
-    // ───────────────────────────────────────────────────
-    //  Internal
-    // ───────────────────────────────────────────────────
     private float touchStartTime;
     private float lastTapTime;
     private bool holdTriggered;
     private bool touchActive;
+    private bool touchStartedOverBlockingUI;
 
-    // ───────────────────────────────────────────────────
-    //  Unity Lifecycle
-    // ───────────────────────────────────────────────────
+    private static readonly List<RaycastResult> raycastResultsBuffer = new List<RaycastResult>();
+
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -78,9 +56,6 @@ public class InputManager : MonoBehaviour
 #endif
     }
 
-    // ───────────────────────────────────────────────────
-    //  Touch Input (device)
-    // ───────────────────────────────────────────────────
     private void HandleTouchInput()
     {
         if (Input.touchCount == 0)
@@ -107,9 +82,6 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    // ───────────────────────────────────────────────────
-    //  Mouse Input (editor only)
-    // ───────────────────────────────────────────────────
     private void HandleMouseInput()
     {
         if (Input.GetMouseButtonDown(0))
@@ -122,9 +94,28 @@ public class InputManager : MonoBehaviour
             EndHold();
     }
 
-    // ───────────────────────────────────────────────────
-    //  Phase Handlers
-    // ───────────────────────────────────────────────────
+    private bool IsOverBlockingUI(Vector2 screenPosition)
+    {
+        if (EventSystem.current == null) return false;
+
+        PointerEventData pointerData = new PointerEventData(EventSystem.current) { position = screenPosition };
+        raycastResultsBuffer.Clear();
+        EventSystem.current.RaycastAll(pointerData, raycastResultsBuffer);
+
+        for (int i = 0; i < raycastResultsBuffer.Count; i++)
+        {
+            GameObject hitObject = raycastResultsBuffer[i].gameObject;
+
+            if (hitObject.GetComponentInParent<Selectable>() != null)
+                return true;
+
+            if (hitObject.GetComponentInParent<UIInputBlocker>() != null)
+                return true;
+        }
+
+        return false;
+    }
+
     private void OnTouchBegan(Vector2 position)
     {
         TouchStartPosition = position;
@@ -132,10 +123,12 @@ public class InputManager : MonoBehaviour
         holdTriggered = false;
         IsHolding = false;
         touchActive = true;
+        touchStartedOverBlockingUI = IsOverBlockingUI(position);
     }
 
     private void OnTouchHeld(Vector2 position)
     {
+        if (touchStartedOverBlockingUI) return;
         if (holdTriggered) return;
 
         float heldFor = Time.time - touchStartTime;
@@ -146,7 +139,6 @@ public class InputManager : MonoBehaviour
             holdTriggered = true;
             IsHolding = true;
 
-            // Fire static event + EventBus
             OnHoldStart?.Invoke();
             EventBus<HoldStartEvent>.Publish(new HoldStartEvent { screenPosition = TouchStartPosition });
         }
@@ -156,7 +148,14 @@ public class InputManager : MonoBehaviour
     {
         touchActive = false;
 
-        // Was a hold
+        if (touchStartedOverBlockingUI)
+        {
+            touchStartedOverBlockingUI = false;
+            holdTriggered = false;
+            IsHolding = false;
+            return;
+        }
+
         if (holdTriggered)
         {
             EndHold();
@@ -169,7 +168,6 @@ public class InputManager : MonoBehaviour
         float movedV = Mathf.Abs(deltaY) / Screen.height;
         bool swiped = movedH > swipeThreshold || movedV > swipeThreshold;
 
-        // Was a swipe
         if (swiped)
         {
             SwipeDirection dir;
@@ -180,7 +178,6 @@ public class InputManager : MonoBehaviour
 
             LastSwipeDirection = dir;
 
-            // Fire static events + EventBus
             OnSwipe?.Invoke(dir);
             EventBus<SwipeEvent>.Publish(new SwipeEvent
             {
@@ -199,20 +196,17 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        // Was a tap
         float timeSinceLastTap = Time.time - lastTapTime;
         bool isDoubleTap = lastTapTime > 0f && timeSinceLastTap <= doubleTapWindow;
 
         if (isDoubleTap)
         {
-            // Fire static event + EventBus
             OnDoubleTap?.Invoke();
             EventBus<DoubleTapEvent>.Publish(new DoubleTapEvent { screenPosition = position });
-            lastTapTime = 0f; // reset so triple-tap doesn't count as double
+            lastTapTime = 0f;
         }
         else
         {
-            // Fire static event + EventBus
             OnTap?.Invoke();
             EventBus<TapEvent>.Publish(new TapEvent { screenPosition = position });
             lastTapTime = Time.time;
