@@ -1,23 +1,38 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ButtonAnimator : MonoBehaviour
 {
     RectTransform rect;
-    Tween scaleTween;
+    Tween scaleTween, clickTween;
+    Button btn;
 
-    [SerializeField] Ease ease;
-    [SerializeField] float animationSize;
-    [SerializeField] float animationDuration;
+    [SerializeField] bool isScaleAnimationEnabled,isClickAnimationEnabled;
+
+    [Header("ScaleAnimation")]
+    [SerializeField] Ease scaleEase;
+    [SerializeField] float scaleAnimationSize;
+    [SerializeField] float scaleAnimationDuration;
+
+    [Header("ClickAnimation")]
+    [SerializeField] Ease clickEase;
+    [SerializeField] float clickAnimationSize;
+    [SerializeField] float clickAnimationDuration;
 
     private void Awake()
     {
         rect = GetComponent<RectTransform>();
+        btn = GetComponent<Button>();
+
+        if (isClickAnimationEnabled)
+            btn?.onClick.AddListener(OnClickAnimation);
     }
 
     private void OnEnable()
     {
-        RestartTween();
+        if (isScaleAnimationEnabled)
+            RestartTween();
     }
 
     private void OnDisable()
@@ -32,9 +47,19 @@ public class ButtonAnimator : MonoBehaviour
         rect.localScale = Vector3.one;
 
         scaleTween = rect
-            .DOScale(animationSize, animationDuration)
+            .DOScale(scaleAnimationSize, scaleAnimationDuration)
             .SetLoops(-1, LoopType.Yoyo)
-            .SetEase(ease);
+            .SetEase(scaleEase);
+    }
+
+    void OnClickAnimation()
+    {
+        clickTween?.Kill();
+
+        clickTween = rect
+            .DOScale(scaleAnimationSize, scaleAnimationDuration)
+            .SetLoops(1, LoopType.Restart)
+            .SetEase(clickEase);
     }
 
 #if UNITY_EDITOR

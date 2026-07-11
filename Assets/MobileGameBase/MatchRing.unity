@@ -3055,9 +3055,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 292f75ae4961acb4dadf56cc3b63f7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ease: 3
-  animationSize: 1.2
-  animationDuration: 1.2
+  isScaleAnimationEnabled: 1
+  isClickAnimationEnabled: 1
+  scaleEase: 0
+  scaleAnimationSize: 0
+  scaleAnimationDuration: 0
+  clickEase: 0
+  clickAnimationSize: 0
+  clickAnimationDuration: 0
 --- !u!1 &1573670724
 GameObject:
   m_ObjectHideFlags: 0
