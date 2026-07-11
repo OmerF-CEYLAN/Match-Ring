@@ -1,20 +1,10 @@
-// ═══════════════════════════════════════════════════════
-//  GameUI.cs  —  REUSABLE. Wire up in Inspector per game.
-//  Subscribes to game events via EventBus.
-//  No direct reference to GameManager needed anywhere.
-// ═══════════════════════════════════════════════════════
-
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
-using static System.Net.Mime.MediaTypeNames;
 
 public class GameUI : MonoBehaviour
 {
-    // ───────────────────────────────────────────────────
-    //  Inspector References
-    // ───────────────────────────────────────────────────
     [Header("Panels")]
     [SerializeField] private GameObject idlePanel;
     [SerializeField] private GameObject hudPanel;
@@ -37,6 +27,7 @@ public class GameUI : MonoBehaviour
 
     [Header("Buttons")]
     [SerializeField] private Button restartButton;
+    [SerializeField] private Button playButton;
 
     [Header("Item Colleciton")]
     [SerializeField] GameObject collectionPanel;
@@ -44,14 +35,17 @@ public class GameUI : MonoBehaviour
     [SerializeField] Button closeCollectionButton;
     [SerializeField] CollectionManager collectionManager;
 
-    // ───────────────────────────────────────────────────
-    //  Internal state
-    // ───────────────────────────────────────────────────
+    [Header("Settings")]
+    [SerializeField] GameObject settingsPanel;
+    [SerializeField] Button settingsButton;
+    [SerializeField] Button inGameSettingsButton;
+    [SerializeField] Button closeSettingsButton;
+    [SerializeField] Button musicToggleButton;
+    [SerializeField] Button sfxToggleButton;
+    [SerializeField] Sprite toggleOn, toggleOff;
+
     private int cachedHighScore;
 
-    // ───────────────────────────────────────────────────
-    //  Event Bindings
-    // ───────────────────────────────────────────────────
     private EventBinding<GameStartedEvent> gameStartedBinding;
     private EventBinding<GameOverEvent> gameOverBinding;
     private EventBinding<ScoreChangedEvent> scoreChangedBinding;
@@ -62,9 +56,6 @@ public class GameUI : MonoBehaviour
 
     private int displayedScore;
 
-    // ───────────────────────────────────────────────────
-    //  Lifecycle
-    // ───────────────────────────────────────────────────
     private void OnEnable()
     {
         gameStartedBinding = new EventBinding<GameStartedEvent>(HandleGameStarted);
@@ -91,22 +82,39 @@ public class GameUI : MonoBehaviour
         EventBus<ScoreChangedEvent>.Unsubscribe(scoreChangedBinding);
         EventBus<NewHighScoreEvent>.Unsubscribe(newHighScoreBinding);
         EventBus<AccuricyTextEvent>.Unsubscribe(accuricyTextBinding);
+        EventBus<ComboIncreasedEvent>.Unsubscribe(comboIncreasedBinding);
+        EventBus<ComboFinishedEvent>.Unsubscribe(comboFinishedBinding);
     }
 
     private void Start()
     {
         restartButton?.onClick.AddListener(OnRestartClicked);
+        playButton?.onClick.AddListener(OnPlayClicked);
+
         collectionButton.onClick.AddListener(OpenCollection);
         closeCollectionButton.onClick.AddListener(CloseCollection);
 
-        // Seed the cached high score from GameManager if available,
-        // otherwise it will be updated by the first NewHighScoreEvent.
+        settingsButton?.onClick.AddListener(OpenSettings);
+        inGameSettingsButton?.onClick.AddListener(OpenSettings);
+        closeSettingsButton?.onClick.AddListener(CloseSettings);
+        musicToggleButton?.onClick.AddListener(OnMusicToggleClicked);
+        sfxToggleButton?.onClick.AddListener(OnSFXToggleClicked);
+
         if (GameManager.Instance != null)
             cachedHighScore = GameManager.Instance.HighScore;
+
+        settingsPanel?.SetActive(false);
+        collectionPanel?.SetActive(false);
 
         ShowIdle();
         PlayAnimation(titleText);
         PlayAnimation(restartText);
+    }
+
+    void OnPlayClicked()
+    {
+        UIClickGuard.LastUIClickTime = Time.unscaledTime;
+        GameManager.Instance?.StartGame();
     }
 
     void OpenCollection()
@@ -120,9 +128,37 @@ public class GameUI : MonoBehaviour
         collectionPanel.SetActive(false);
     }
 
-    // ───────────────────────────────────────────────────
-    //  Event Handlers
-    // ───────────────────────────────────────────────────
+    void OpenSettings()
+    {
+        RefreshSettingsUI();
+        settingsPanel.SetActive(true);
+    }
+
+    void CloseSettings()
+    {
+        settingsPanel.SetActive(false);
+    }
+
+    void OnMusicToggleClicked()
+    {
+        AudioManager.Instance?.ToggleMusicMute();
+        RefreshSettingsUI();
+    }
+
+    void OnSFXToggleClicked()
+    {
+        AudioManager.Instance?.ToggleSFXMute();
+        RefreshSettingsUI();
+    }
+
+    void RefreshSettingsUI()
+    {
+        if (AudioManager.Instance == null) return;
+
+        musicToggleButton.GetComponent<Image>().sprite = AudioManager.Instance.IsMusicMuted ? toggleOff : toggleOn;
+        sfxToggleButton.GetComponent<Image>().sprite = AudioManager.Instance.IsSFXMuted ? toggleOff : toggleOn;
+    }
+
     private void HandleGameStarted()
     {
         displayedScore = 0;
@@ -140,7 +176,6 @@ public class GameUI : MonoBehaviour
 
     private void HandleGameOver(GameOverEvent e)
     {
-        // Cache the latest high score from the event (no GameManager reference needed)
         cachedHighScore = e.highScore;
 
         hudPanel?.SetActive(false);
@@ -149,6 +184,7 @@ public class GameUI : MonoBehaviour
         SetText(gameOverScoreText, Mathf.FloorToInt(e.finalScore).ToString());
         SetText(gameOverHighScoreText, e.highScore.ToString());
     }
+
     void HandleComboIncreased(ComboIncreasedEvent e)
     {
         if (e.combo < 2)
@@ -235,7 +271,7 @@ public class GameUI : MonoBehaviour
             accuricyText.text = "Perfect!";
             effect.enabled = true;
         }
-        else if(e.score == 1)
+        else if (e.score == 1)
         {
             accuricyText.text = "Good!";
         }
@@ -259,18 +295,12 @@ public class GameUI : MonoBehaviour
             });
     }
 
-    // ───────────────────────────────────────────────────
-    //  Restart Button
-    // ───────────────────────────────────────────────────
     private void OnRestartClicked()
     {
         UIClickGuard.LastUIClickTime = Time.unscaledTime;
         GameManager.Instance?.RestartGame();
     }
 
-    // ───────────────────────────────────────────────────
-    //  Helpers
-    // ───────────────────────────────────────────────────
     private void ShowIdle()
     {
         idlePanel?.SetActive(true);
@@ -298,5 +328,4 @@ public class GameUI : MonoBehaviour
 
         seq.SetLoops(-1, LoopType.Yoyo);
     }
-
 }

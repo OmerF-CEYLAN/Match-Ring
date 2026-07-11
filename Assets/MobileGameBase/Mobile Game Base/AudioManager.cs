@@ -17,7 +17,8 @@ public class AudioManager : MonoBehaviour
 
     public float MusicVolume { get; private set; }
     public float SFXVolume { get; private set; }
-    public bool IsMuted { get; private set; }
+    public bool IsMusicMuted { get; private set; }
+    public bool IsSFXMuted { get; private set; }
 
     private AudioSource musicSource;
     private AudioSource[] sfxPool;
@@ -30,7 +31,8 @@ public class AudioManager : MonoBehaviour
 
     private const string KeyMusicVolume = "Audio_MusicVol";
     private const string KeySFXVolume = "Audio_SFXVol";
-    private const string KeyMuted = "Audio_Muted";
+    private const string KeyMusicMuted = "Audio_MusicMuted";
+    private const string KeySFXMuted = "Audio_SFXMuted";
 
     private void Awake()
     {
@@ -120,7 +122,7 @@ public class AudioManager : MonoBehaviour
 
         musicSource.clip = clip;
         musicSource.loop = loop;
-        musicSource.volume = IsMuted ? 0f : MusicVolume;
+        musicSource.volume = IsMusicMuted ? 0f : MusicVolume;
         musicSource.Play();
     }
 
@@ -156,7 +158,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(AudioClip clip, float volumeScale = 1f, float pitchVariance = 0f)
     {
-        if (clip == null || IsMuted) return;
+        if (clip == null || IsSFXMuted) return;
 
         AudioSource source = GetFreeSFXSource();
 
@@ -177,7 +179,7 @@ public class AudioManager : MonoBehaviour
     {
         MusicVolume = Mathf.Clamp01(volume);
 
-        if (!IsMuted)
+        if (!IsMusicMuted)
             musicSource.volume = MusicVolume;
 
         PlayerPrefs.SetFloat(KeyMusicVolume, MusicVolume);
@@ -192,21 +194,33 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    public void ToggleMute()
+    public void ToggleMusicMute()
     {
-        SetMute(!IsMuted);
+        SetMusicMute(!IsMusicMuted);
     }
 
-    public void SetMute(bool muted)
+    public void ToggleSFXMute()
     {
-        IsMuted = muted;
+        SetSFXMute(!IsSFXMuted);
+    }
 
-        musicSource.volume = IsMuted ? 0f : MusicVolume;
+    public void SetMusicMute(bool muted)
+    {
+        IsMusicMuted = muted;
+        musicSource.volume = IsMusicMuted ? 0f : MusicVolume;
 
-        foreach (var s in sfxPool)
-            s.volume = IsMuted ? 0f : SFXVolume;
+        PlayerPrefs.SetInt(KeyMusicMuted, IsMusicMuted ? 1 : 0);
+        PlayerPrefs.Save();
+    }
 
-        PlayerPrefs.SetInt(KeyMuted, IsMuted ? 1 : 0);
+    public void SetSFXMute(bool muted)
+    {
+        IsSFXMuted = muted;
+
+        if (IsSFXMuted)
+            StopAllSFX();
+
+        PlayerPrefs.SetInt(KeySFXMuted, IsSFXMuted ? 1 : 0);
         PlayerPrefs.Save();
     }
 
@@ -256,9 +270,10 @@ public class AudioManager : MonoBehaviour
     {
         MusicVolume = PlayerPrefs.GetFloat(KeyMusicVolume, defaultMusicVolume);
         SFXVolume = PlayerPrefs.GetFloat(KeySFXVolume, defaultSFXVolume);
-        IsMuted = PlayerPrefs.GetInt(KeyMuted, 0) == 1;
+        IsMusicMuted = PlayerPrefs.GetInt(KeyMusicMuted, 0) == 1;
+        IsSFXMuted = PlayerPrefs.GetInt(KeySFXMuted, 0) == 1;
 
-        musicSource.volume = IsMuted ? 0f : MusicVolume;
+        musicSource.volume = IsMusicMuted ? 0f : MusicVolume;
     }
 
     private IEnumerator FadeMusicRoutine(AudioClip newClip, float duration)
@@ -277,7 +292,7 @@ public class AudioManager : MonoBehaviour
         musicSource.loop = true;
         musicSource.Play();
 
-        float target = IsMuted ? 0f : MusicVolume;
+        float target = IsMusicMuted ? 0f : MusicVolume;
 
         for (float t = 0f; t < duration; t += Time.unscaledDeltaTime)
         {

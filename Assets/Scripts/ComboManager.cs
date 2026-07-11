@@ -34,6 +34,8 @@ public class ComboManager : MonoBehaviour
 
     void IncreaseCombo()
     {
+        if (TutorialManager.Instance != null && TutorialManager.Instance.IsActive) return;
+
         currentCombo++;
 
         EventBus<ComboIncreasedEvent>.Publish(new ComboIncreasedEvent { combo = currentCombo });
