@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class CollectionItem : MonoBehaviour
 {
-    [SerializeField] Image itemImage;
+    [SerializeField] Image itemImage,outerImage;
     [SerializeField] GameObject lockObj;
 
     int index;
@@ -12,7 +12,7 @@ public class CollectionItem : MonoBehaviour
     {
         index = itemIndex;
         itemImage.sprite = sprite;
-
+        outerImage.sprite = sprite;
         Refresh();
     }
 

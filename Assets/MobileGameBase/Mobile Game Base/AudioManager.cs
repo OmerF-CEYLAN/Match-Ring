@@ -11,6 +11,12 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip perfectMatchEffect;
     [SerializeField] private float fadeDuration = 0.5f;
 
+    [Header("Combo Sound")]
+    [SerializeField] private AudioClip comboSound;
+    [SerializeField] private float comboBasePitch = 1f;
+    [SerializeField] private float comboPitchStepUp = 0.05f;
+    [SerializeField] private float comboMaxPitch = 1.8f;
+
     [Header("Default Volumes")]
     [SerializeField, Range(0f, 1f)] private float defaultMusicVolume = 0.6f;
     [SerializeField, Range(0f, 1f)] private float defaultSFXVolume = 1.0f;
@@ -28,6 +34,7 @@ public class AudioManager : MonoBehaviour
     private EventBinding<PlaySFXEvent> playSFXBinding;
     private EventBinding<PlayMusicEvent> playMusicBinding;
     private EventBinding<PerfectMatchSFXEvent> perfectMatchSFXBinding;
+    private EventBinding<ComboIncreasedEvent> comboIncreasedBinding;
 
     private const string KeyMusicVolume = "Audio_MusicVol";
     private const string KeySFXVolume = "Audio_SFXVol";
@@ -61,11 +68,13 @@ public class AudioManager : MonoBehaviour
         playSFXBinding = new EventBinding<PlaySFXEvent>(HandlePlaySFX);
         playMusicBinding = new EventBinding<PlayMusicEvent>(HandlePlayMusic);
         perfectMatchSFXBinding = new EventBinding<PerfectMatchSFXEvent>(HandlePerfectMatchSFX);
+        comboIncreasedBinding = new EventBinding<ComboIncreasedEvent>(HandleComboIncreased);
 
         EventBus<GameOverEvent>.Subscribe(gameOverBinding);
         EventBus<PlaySFXEvent>.Subscribe(playSFXBinding);
         EventBus<PlayMusicEvent>.Subscribe(playMusicBinding);
         EventBus<PerfectMatchSFXEvent>.Subscribe(perfectMatchSFXBinding);
+        EventBus<ComboIncreasedEvent>.Subscribe(comboIncreasedBinding);
     }
 
     private void OnDisable()
@@ -74,6 +83,7 @@ public class AudioManager : MonoBehaviour
         EventBus<PlaySFXEvent>.Unsubscribe(playSFXBinding);
         EventBus<PlayMusicEvent>.Unsubscribe(playMusicBinding);
         EventBus<PerfectMatchSFXEvent>.Unsubscribe(perfectMatchSFXBinding);
+        EventBus<ComboIncreasedEvent>.Unsubscribe(comboIncreasedBinding);
     }
 
     private void HandleGameOver(GameOverEvent e)
@@ -111,7 +121,15 @@ public class AudioManager : MonoBehaviour
 
     private void HandlePerfectMatchSFX()
     {
-        PlaySFX(perfectMatchEffect);
+        //PlaySFX(perfectMatchEffect);
+    }
+
+    private void HandleComboIncreased(ComboIncreasedEvent e)
+    {
+        if (e.combo < 2) return;
+
+        float pitch = Mathf.Min(comboMaxPitch, comboBasePitch + (e.combo - 2) * comboPitchStepUp);
+        PlaySFX(comboSound, 1f, 0f, pitch);
     }
 
     public void PlayMusic(AudioClip clip, bool loop = true)
@@ -156,7 +174,7 @@ public class AudioManager : MonoBehaviour
         musicSource.UnPause();
     }
 
-    public void PlaySFX(AudioClip clip, float volumeScale = 1f, float pitchVariance = 0f)
+    public void PlaySFX(AudioClip clip, float volumeScale = 1f, float pitchVariance = 0f, float? fixedPitch = null)
     {
         if (clip == null || IsSFXMuted) return;
 
@@ -164,7 +182,7 @@ public class AudioManager : MonoBehaviour
 
         source.clip = clip;
         source.loop = false;
-        source.pitch = 1f + Random.Range(-pitchVariance, pitchVariance);
+        source.pitch = fixedPitch ?? (1f + Random.Range(-pitchVariance, pitchVariance));
         source.volume = SFXVolume * Mathf.Clamp01(volumeScale);
         source.Play();
     }

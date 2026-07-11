@@ -3057,12 +3057,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isScaleAnimationEnabled: 1
   isClickAnimationEnabled: 1
-  scaleEase: 0
-  scaleAnimationSize: 0
-  scaleAnimationDuration: 0
-  clickEase: 0
-  clickAnimationSize: 0
-  clickAnimationDuration: 0
+  scaleEase: 3
+  scaleAnimationSize: 1.2
+  scaleAnimationDuration: 1.2
+  clickEase: 6
+  clickAnimationSize: 1.5
+  clickAnimationDuration: 0.3
 --- !u!1 &1573670724
 GameObject:
   m_ObjectHideFlags: 0
@@ -6310,6 +6310,10 @@ MonoBehaviour:
   gameOverStinger: {fileID: 8300000, guid: d4007067d30a702478f8de23ab74795f, type: 3}
   perfectMatchEffect: {fileID: 8300000, guid: 371904b12ec4a35468d4955d5278944c, type: 3}
   fadeDuration: 0.5
+  comboSound: {fileID: 8300000, guid: 1cc8965352868e54fbab950841e2eda0, type: 3}
+  comboBasePitch: 1
+  comboPitchStepUp: 0.05
+  comboMaxPitch: 1.4
   defaultMusicVolume: 0.3
   defaultSFXVolume: 0.5
 --- !u!222 &5987011975070478213
