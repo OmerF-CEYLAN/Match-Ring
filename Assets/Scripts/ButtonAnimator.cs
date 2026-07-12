@@ -46,20 +46,28 @@ public class ButtonAnimator : MonoBehaviour
 
         rect.localScale = Vector3.one;
 
-        scaleTween = rect
+        if (isScaleAnimationEnabled)
+
+            scaleTween = rect
             .DOScale(scaleAnimationSize, scaleAnimationDuration)
             .SetLoops(-1, LoopType.Yoyo)
             .SetEase(scaleEase);
+
     }
 
     void OnClickAnimation()
     {
+        scaleTween?.Pause();
+
         clickTween?.Kill();
 
-        clickTween = rect
-            .DOScale(scaleAnimationSize, scaleAnimationDuration)
-            .SetLoops(1, LoopType.Restart)
-            .SetEase(clickEase);
+        rect.DOScale(clickAnimationSize, clickAnimationDuration)
+            .SetLoops(2, LoopType.Yoyo)
+            .SetEase(clickEase)
+            .OnComplete(() =>
+            {
+                RestartTween();
+            });
     }
 
 #if UNITY_EDITOR

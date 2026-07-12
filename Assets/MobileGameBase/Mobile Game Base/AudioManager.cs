@@ -21,6 +21,9 @@ public class AudioManager : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float defaultMusicVolume = 0.6f;
     [SerializeField, Range(0f, 1f)] private float defaultSFXVolume = 1.0f;
 
+    [Header("Button Click Sound")]
+    [SerializeField] private AudioClip clickSound;
+
     public float MusicVolume { get; private set; }
     public float SFXVolume { get; private set; }
     public bool IsMusicMuted { get; private set; }
@@ -35,6 +38,7 @@ public class AudioManager : MonoBehaviour
     private EventBinding<PlayMusicEvent> playMusicBinding;
     private EventBinding<PerfectMatchSFXEvent> perfectMatchSFXBinding;
     private EventBinding<ComboIncreasedEvent> comboIncreasedBinding;
+    private EventBinding<ButtonClickedEvent> buttonClickedBinding;
 
     private const string KeyMusicVolume = "Audio_MusicVol";
     private const string KeySFXVolume = "Audio_SFXVol";
@@ -69,12 +73,14 @@ public class AudioManager : MonoBehaviour
         playMusicBinding = new EventBinding<PlayMusicEvent>(HandlePlayMusic);
         perfectMatchSFXBinding = new EventBinding<PerfectMatchSFXEvent>(HandlePerfectMatchSFX);
         comboIncreasedBinding = new EventBinding<ComboIncreasedEvent>(HandleComboIncreased);
+        buttonClickedBinding = new EventBinding<ButtonClickedEvent>(HandleButtonClicked);
 
         EventBus<GameOverEvent>.Subscribe(gameOverBinding);
         EventBus<PlaySFXEvent>.Subscribe(playSFXBinding);
         EventBus<PlayMusicEvent>.Subscribe(playMusicBinding);
         EventBus<PerfectMatchSFXEvent>.Subscribe(perfectMatchSFXBinding);
         EventBus<ComboIncreasedEvent>.Subscribe(comboIncreasedBinding);
+        EventBus<ButtonClickedEvent>.Subscribe(buttonClickedBinding);
     }
 
     private void OnDisable()
@@ -84,6 +90,7 @@ public class AudioManager : MonoBehaviour
         EventBus<PlayMusicEvent>.Unsubscribe(playMusicBinding);
         EventBus<PerfectMatchSFXEvent>.Unsubscribe(perfectMatchSFXBinding);
         EventBus<ComboIncreasedEvent>.Unsubscribe(comboIncreasedBinding);
+        EventBus<ButtonClickedEvent>.Unsubscribe(buttonClickedBinding);
     }
 
     private void HandleGameOver(GameOverEvent e)
@@ -104,6 +111,11 @@ public class AudioManager : MonoBehaviour
         {
             FadeOutMusic();
         }
+    }
+
+    private void HandleButtonClicked()
+    {
+        PlaySFX(clickSound);
     }
 
     private void HandlePlaySFX(PlaySFXEvent e)

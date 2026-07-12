@@ -2200,6 +2200,8 @@ RectTransform:
   - {fileID: 63413582}
   - {fileID: 1584475209}
   - {fileID: 686205059}
+  - {fileID: 2127188473}
+  - {fileID: 1701253515}
   - {fileID: 1424244906}
   - {fileID: 1951563778}
   m_Father: {fileID: 6959592085721222656}
@@ -2944,6 +2946,7 @@ GameObject:
   - component: {fileID: 1424244905}
   - component: {fileID: 1424244904}
   - component: {fileID: 1424244903}
+  - component: {fileID: 1424244907}
   m_Layer: 5
   m_Name: SFXButton
   m_TagString: Untagged
@@ -2974,7 +2977,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -3044,8 +3047,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2127188473}
+  m_Children: []
   m_Father: {fileID: 945074729}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -3053,6 +3055,26 @@ RectTransform:
   m_AnchoredPosition: {x: 87, y: 48}
   m_SizeDelta: {x: 145, y: 81.5}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1424244907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424244902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 292f75ae4961acb4dadf56cc3b63f7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isScaleAnimationEnabled: 0
+  isClickAnimationEnabled: 1
+  scaleEase: 0
+  scaleAnimationSize: 0
+  scaleAnimationDuration: 0
+  clickEase: 30
+  clickAnimationSize: 1.2
+  clickAnimationDuration: 0.1
 --- !u!1 &1461884491
 GameObject:
   m_ObjectHideFlags: 0
@@ -3221,7 +3243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isScaleAnimationEnabled: 1
-  isClickAnimationEnabled: 1
+  isClickAnimationEnabled: 0
   scaleEase: 3
   scaleAnimationSize: 1.2
   scaleAnimationDuration: 1.2
@@ -3756,7 +3778,7 @@ GameObject:
   - component: {fileID: 1701253517}
   - component: {fileID: 1701253516}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: SoundText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3769,16 +3791,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1701253514}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1951563778}
+  m_Father: {fileID: 945074729}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -277, y: 0}
+  m_AnchoredPosition: {x: -190, y: -85.000015}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1701253516
@@ -4399,6 +4421,7 @@ GameObject:
   - component: {fileID: 1951563780}
   - component: {fileID: 1951563779}
   - component: {fileID: 1951563781}
+  - component: {fileID: 1951563782}
   m_Layer: 5
   m_Name: MusicButton
   m_TagString: Untagged
@@ -4417,8 +4440,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1701253515}
+  m_Children: []
   m_Father: {fileID: 945074729}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -4487,7 +4509,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -4508,6 +4530,26 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1951563782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951563777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 292f75ae4961acb4dadf56cc3b63f7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isScaleAnimationEnabled: 0
+  isClickAnimationEnabled: 1
+  scaleEase: 0
+  scaleAnimationSize: 0
+  scaleAnimationDuration: 0
+  clickEase: 30
+  clickAnimationSize: 1.2
+  clickAnimationDuration: 0.1
 --- !u!1 &1958249451
 GameObject:
   m_ObjectHideFlags: 0
@@ -5153,7 +5195,7 @@ GameObject:
   - component: {fileID: 2127188475}
   - component: {fileID: 2127188474}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: SFXText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5166,16 +5208,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2127188472}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1424244906}
+  m_Father: {fileID: 945074729}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -277, y: 0}
+  m_AnchoredPosition: {x: -190, y: 48.000004}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2127188474
@@ -6339,12 +6381,13 @@ MonoBehaviour:
   gameOverStinger: {fileID: 8300000, guid: d4007067d30a702478f8de23ab74795f, type: 3}
   perfectMatchEffect: {fileID: 8300000, guid: 371904b12ec4a35468d4955d5278944c, type: 3}
   fadeDuration: 0.5
-  comboSound: {fileID: 8300000, guid: 1cc8965352868e54fbab950841e2eda0, type: 3}
-  comboBasePitch: 1
+  comboSound: {fileID: 8300000, guid: 44766caa059435f4fb71af84b2bea7e4, type: 3}
+  comboBasePitch: 0.9
   comboPitchStepUp: 0.05
   comboMaxPitch: 1.4
-  defaultMusicVolume: 0.3
-  defaultSFXVolume: 0.5
+  defaultMusicVolume: 0.2
+  defaultSFXVolume: 0.7
+  clickSound: {fileID: 8300000, guid: 09f8dc09efedc414784e7ba556669245, type: 3}
 --- !u!222 &5987011975070478213
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6958,6 +7001,7 @@ MonoBehaviour:
   titleText: {fileID: 3564683678269570869}
   restartButton: {fileID: 1321511671993312811}
   playButton: {fileID: 1512259277}
+  mainMenuButton: {fileID: 779950337}
   collectionPanel: {fileID: 2015673263}
   collectionButton: {fileID: 1937039056}
   closeCollectionButton: {fileID: 2108998826}

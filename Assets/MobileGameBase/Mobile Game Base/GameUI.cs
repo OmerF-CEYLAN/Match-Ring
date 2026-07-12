@@ -113,9 +113,33 @@ public class GameUI : MonoBehaviour
         settingsPanel?.SetActive(false);
         collectionPanel?.SetActive(false);
 
+        SetUpAllButtonsClickSound();
+
         ShowIdle();
         PlayAnimation(titleText);
         PlayAnimation(restartText);
+    }
+
+    private void AddButtonSound(Button button)
+    {
+        button.onClick.AddListener(() =>
+        {
+            EventBus<ButtonClickedEvent>.Publish(new ButtonClickedEvent());
+        });
+    }
+
+    void SetUpAllButtonsClickSound()
+    {
+        AddButtonSound(restartButton);
+        AddButtonSound(playButton);
+        AddButtonSound(collectionButton);
+        AddButtonSound(closeCollectionButton);
+        AddButtonSound(settingsButton);
+        AddButtonSound(inGameSettingsButton);
+        AddButtonSound(closeSettingsButton);
+        AddButtonSound(musicToggleButton);
+        AddButtonSound(sfxToggleButton);
+        AddButtonSound(mainMenuButton);
     }
 
     void OnPlayClicked()
