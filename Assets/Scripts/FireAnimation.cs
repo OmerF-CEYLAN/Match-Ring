@@ -18,20 +18,24 @@ public class FireAnimation : MonoBehaviour
 
     EventBinding<ComboIncreasedEvent> comboIncreasedBinding;
     EventBinding<ComboFinishedEvent> comboFinishedBinding;
+    EventBinding<ReturnedToMainMenuEvent> returnedToMainMenuBinding;
 
     private void OnEnable()
     {
         comboIncreasedBinding = new EventBinding<ComboIncreasedEvent>(OnComboIncreased);
         comboFinishedBinding = new EventBinding<ComboFinishedEvent>(OnComboFinished);
+        returnedToMainMenuBinding = new EventBinding<ReturnedToMainMenuEvent>(DisableFire);
 
         EventBus<ComboIncreasedEvent>.Subscribe(comboIncreasedBinding);
         EventBus<ComboFinishedEvent>.Subscribe(comboFinishedBinding);
+        EventBus<ReturnedToMainMenuEvent>.Subscribe(returnedToMainMenuBinding);
     }
 
     private void OnDisable()
     {
         EventBus<ComboIncreasedEvent>.Unsubscribe(comboIncreasedBinding);
         EventBus<ComboFinishedEvent>.Unsubscribe(comboFinishedBinding);
+        EventBus<ReturnedToMainMenuEvent>.Unsubscribe(returnedToMainMenuBinding);
     }
 
     void Update()

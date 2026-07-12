@@ -63,6 +63,17 @@ public class GameManager : MonoBehaviour
         OnGameStarted_Hook();
     }
 
+    public void ReturnToMainMenu()
+    {
+        if (CurrentState == GameState.Idle) return;
+
+        CurrentState = GameState.Idle;
+
+        OnReturnToMainMenu_Hook();
+
+        EventBus<ReturnedToMainMenuEvent>.Publish(new ReturnedToMainMenuEvent());
+    }
+
     /// <summary>
     /// Call this the moment the player fails.
     /// Any script can call it: collision, timer, obstacle, etc.
@@ -136,6 +147,7 @@ public class GameManager : MonoBehaviour
     protected virtual void OnGameOver_Hook() { }
     protected virtual void OnScoreChanged_Hook(float score) { }
     protected virtual void OnRestart_Hook() { }
+    protected virtual void OnReturnToMainMenu_Hook() { }
 
     // ───────────────────────────────────────────────────
     //  High Score

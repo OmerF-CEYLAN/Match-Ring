@@ -141,6 +141,14 @@ public class MatchItemsGameManager : GameManager
         else
             SelectRandomMinigame();
     }
+    protected override void OnReturnToMainMenu_Hook()
+    {
+        StopAllCoroutines();
+
+        tapMiniGameSource.gameObject.SetActive(false);
+        holdMiniGameSource.gameObject.SetActive(false);
+        currentMinigame = null;
+    }
 
     IEnumerator TriggerGameOverDelayed()
     {

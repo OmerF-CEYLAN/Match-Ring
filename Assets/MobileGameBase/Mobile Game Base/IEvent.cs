@@ -131,3 +131,7 @@ public struct ComboIncreasedEvent : IEvent
 public struct ComboFinishedEvent : IEvent
 {
 }
+
+public struct ReturnedToMainMenuEvent : IEvent
+{
+}

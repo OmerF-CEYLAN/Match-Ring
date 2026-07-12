@@ -28,6 +28,7 @@ public class GameUI : MonoBehaviour
     [Header("Buttons")]
     [SerializeField] private Button restartButton;
     [SerializeField] private Button playButton;
+    [SerializeField] private Button mainMenuButton;
 
     [Header("Item Colleciton")]
     [SerializeField] GameObject collectionPanel;
@@ -53,6 +54,7 @@ public class GameUI : MonoBehaviour
     private EventBinding<AccuricyTextEvent> accuricyTextBinding;
     private EventBinding<ComboIncreasedEvent> comboIncreasedBinding;
     private EventBinding<ComboFinishedEvent> comboFinishedBinding;
+    private EventBinding<ReturnedToMainMenuEvent> returnedToMainMenuBinding;
 
     private int displayedScore;
 
@@ -65,6 +67,7 @@ public class GameUI : MonoBehaviour
         accuricyTextBinding = new EventBinding<AccuricyTextEvent>(HandleAccuricyText);
         comboIncreasedBinding = new EventBinding<ComboIncreasedEvent>(HandleComboIncreased);
         comboFinishedBinding = new EventBinding<ComboFinishedEvent>(HandleComboFinished);
+        returnedToMainMenuBinding = new EventBinding<ReturnedToMainMenuEvent>(ShowIdle);
 
         EventBus<GameStartedEvent>.Subscribe(gameStartedBinding);
         EventBus<GameOverEvent>.Subscribe(gameOverBinding);
@@ -73,6 +76,8 @@ public class GameUI : MonoBehaviour
         EventBus<AccuricyTextEvent>.Subscribe(accuricyTextBinding);
         EventBus<ComboIncreasedEvent>.Subscribe(comboIncreasedBinding);
         EventBus<ComboFinishedEvent>.Subscribe(comboFinishedBinding);
+        EventBus<ReturnedToMainMenuEvent>.Subscribe(returnedToMainMenuBinding);
+
     }
 
     private void OnDisable()
@@ -84,6 +89,7 @@ public class GameUI : MonoBehaviour
         EventBus<AccuricyTextEvent>.Unsubscribe(accuricyTextBinding);
         EventBus<ComboIncreasedEvent>.Unsubscribe(comboIncreasedBinding);
         EventBus<ComboFinishedEvent>.Unsubscribe(comboFinishedBinding);
+        EventBus<ReturnedToMainMenuEvent>.Unsubscribe(returnedToMainMenuBinding);
     }
 
     private void Start()
@@ -99,6 +105,7 @@ public class GameUI : MonoBehaviour
         closeSettingsButton?.onClick.AddListener(CloseSettings);
         musicToggleButton?.onClick.AddListener(OnMusicToggleClicked);
         sfxToggleButton?.onClick.AddListener(OnSFXToggleClicked);
+        mainMenuButton?.onClick.AddListener(OnMainMenuClicked);
 
         if (GameManager.Instance != null)
             cachedHighScore = GameManager.Instance.HighScore;
@@ -115,6 +122,12 @@ public class GameUI : MonoBehaviour
     {
         UIClickGuard.LastUIClickTime = Time.unscaledTime;
         GameManager.Instance?.StartGame();
+    }
+
+    private void OnMainMenuClicked()
+    {
+        UIClickGuard.LastUIClickTime = Time.unscaledTime;
+        GameManager.Instance?.ReturnToMainMenu();
     }
 
     void OpenCollection()

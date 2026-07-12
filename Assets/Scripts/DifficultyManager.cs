@@ -10,6 +10,7 @@ public class DifficultyManager : MonoBehaviour
 
     EventBinding<SuccessfulMatchEvent> successfullMatchBinding;
     EventBinding<GameOverEvent> gameOverBinding;
+    EventBinding<ReturnedToMainMenuEvent> returnedToMainMenuBinding;
 
     private void Awake()
     {
@@ -20,15 +21,18 @@ public class DifficultyManager : MonoBehaviour
     {
         successfullMatchBinding = new EventBinding<SuccessfulMatchEvent>(OnSuccessfullMatch);
         gameOverBinding = new EventBinding<GameOverEvent>(OnGameOver);
+        returnedToMainMenuBinding = new EventBinding<ReturnedToMainMenuEvent>(OnGameOver);
 
         EventBus<SuccessfulMatchEvent>.Subscribe(successfullMatchBinding);
         EventBus<GameOverEvent>.Subscribe(gameOverBinding);
+        EventBus<ReturnedToMainMenuEvent>.Subscribe(returnedToMainMenuBinding);
     }
 
     private void OnDisable()
     {
         EventBus<SuccessfulMatchEvent>.Unsubscribe(successfullMatchBinding);
         EventBus<GameOverEvent>.Unsubscribe(gameOverBinding);
+        EventBus<ReturnedToMainMenuEvent>.Unsubscribe(returnedToMainMenuBinding);
     }
 
     void OnSuccessfullMatch()
