@@ -184,7 +184,7 @@ public class TutorialManager : MonoBehaviour
         hudPanel?.SetActive(false);
         idlePanel?.SetActive(true);
 
-        yield return StartCoroutine(WaitForContinueTap());
+        tapToContinuePanel?.SetActive(false);
 
         idlePanel?.SetActive(false);
         hudPanel?.SetActive(true);
