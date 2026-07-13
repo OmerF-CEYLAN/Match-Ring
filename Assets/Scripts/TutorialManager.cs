@@ -60,6 +60,7 @@ public class TutorialManager : MonoBehaviour
     {
         onComplete = onCompleteCallback;
         IsActive = true;
+        EventBus<TutorialStartedEvent>.Publish(new TutorialStartedEvent());
 
         tapToContinuePanel?.SetActive(false);
         feedbackText?.gameObject.SetActive(false);
@@ -190,6 +191,8 @@ public class TutorialManager : MonoBehaviour
         hudPanel?.SetActive(true);
 
         IsActive = false;
+        EventBus<TutorialCompletedEvent>.Publish(new TutorialCompletedEvent());
+
         onComplete?.Invoke();
     }
 }

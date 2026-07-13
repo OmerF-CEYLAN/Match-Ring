@@ -55,6 +55,8 @@ public class GameUI : MonoBehaviour
     private EventBinding<ComboIncreasedEvent> comboIncreasedBinding;
     private EventBinding<ComboFinishedEvent> comboFinishedBinding;
     private EventBinding<ReturnedToMainMenuEvent> returnedToMainMenuBinding;
+    private EventBinding<TutorialStartedEvent> tutorialStartedBinding;
+    private EventBinding<TutorialCompletedEvent> tutorialCompletedBinding;
 
     private int displayedScore;
 
@@ -68,6 +70,8 @@ public class GameUI : MonoBehaviour
         comboIncreasedBinding = new EventBinding<ComboIncreasedEvent>(HandleComboIncreased);
         comboFinishedBinding = new EventBinding<ComboFinishedEvent>(HandleComboFinished);
         returnedToMainMenuBinding = new EventBinding<ReturnedToMainMenuEvent>(ShowIdle);
+        tutorialStartedBinding = new EventBinding<TutorialStartedEvent>(HandleTutorialStarted);
+        tutorialCompletedBinding = new EventBinding<TutorialCompletedEvent>(HandleTutorialCompleted);
 
         EventBus<GameStartedEvent>.Subscribe(gameStartedBinding);
         EventBus<GameOverEvent>.Subscribe(gameOverBinding);
@@ -77,6 +81,8 @@ public class GameUI : MonoBehaviour
         EventBus<ComboIncreasedEvent>.Subscribe(comboIncreasedBinding);
         EventBus<ComboFinishedEvent>.Subscribe(comboFinishedBinding);
         EventBus<ReturnedToMainMenuEvent>.Subscribe(returnedToMainMenuBinding);
+        EventBus<TutorialStartedEvent>.Subscribe(tutorialStartedBinding);
+        EventBus<TutorialCompletedEvent>.Subscribe(tutorialCompletedBinding);
 
     }
 
@@ -90,6 +96,8 @@ public class GameUI : MonoBehaviour
         EventBus<ComboIncreasedEvent>.Unsubscribe(comboIncreasedBinding);
         EventBus<ComboFinishedEvent>.Unsubscribe(comboFinishedBinding);
         EventBus<ReturnedToMainMenuEvent>.Unsubscribe(returnedToMainMenuBinding);
+        EventBus<TutorialStartedEvent>.Unsubscribe(tutorialStartedBinding);
+        EventBus<TutorialCompletedEvent>.Unsubscribe(tutorialCompletedBinding);
     }
 
     private void Start()
@@ -128,6 +136,15 @@ public class GameUI : MonoBehaviour
         });
     }
 
+    private void HandleTutorialStarted()
+    {
+        mainMenuButton?.gameObject.SetActive(false);
+    }
+
+    private void HandleTutorialCompleted()
+    {
+        mainMenuButton?.gameObject.SetActive(true);
+    }
     void SetUpAllButtonsClickSound()
     {
         AddButtonSound(restartButton);
