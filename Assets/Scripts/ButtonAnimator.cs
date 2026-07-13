@@ -70,6 +70,24 @@ public class ButtonAnimator : MonoBehaviour
             });
     }
 
+    public void PlayEntrance(float duration, Ease ease)
+    {
+        scaleTween?.Kill();
+        clickTween?.Kill();
+
+        rect.localScale = Vector3.zero;
+
+        scaleTween = rect
+            .DOScale(1f, duration)
+            .SetEase(ease)
+            .SetUpdate(true)
+            .OnComplete(() =>
+            {
+                if (isScaleAnimationEnabled)
+                    RestartTween();
+            });
+    }
+
 #if UNITY_EDITOR
     private void OnValidate()
     {

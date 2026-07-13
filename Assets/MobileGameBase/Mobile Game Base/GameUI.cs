@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
-
+using System.Collections;
 public class GameUI : MonoBehaviour
 {
     [Header("Panels")]
@@ -45,7 +45,13 @@ public class GameUI : MonoBehaviour
     [SerializeField] Button sfxToggleButton;
     [SerializeField] Sprite toggleOn, toggleOff;
 
+    [Header("Idle Buttons Entrance")]
+    [SerializeField] private float idleEntranceDuration = 0.5f;
+    [SerializeField] private Ease idleEntranceEase = Ease.OutBack;
+    private Sequence idleEntranceSequence;
+
     private int cachedHighScore;
+    private int displayedScore;
 
     private EventBinding<GameStartedEvent> gameStartedBinding;
     private EventBinding<GameOverEvent> gameOverBinding;
@@ -58,7 +64,7 @@ public class GameUI : MonoBehaviour
     private EventBinding<TutorialStartedEvent> tutorialStartedBinding;
     private EventBinding<TutorialCompletedEvent> tutorialCompletedBinding;
 
-    private int displayedScore;
+    private Coroutine idleEntranceRoutine;
 
     private void OnEnable()
     {
@@ -98,6 +104,11 @@ public class GameUI : MonoBehaviour
         EventBus<ReturnedToMainMenuEvent>.Unsubscribe(returnedToMainMenuBinding);
         EventBus<TutorialStartedEvent>.Unsubscribe(tutorialStartedBinding);
         EventBus<TutorialCompletedEvent>.Unsubscribe(tutorialCompletedBinding);
+
+        idleEntranceSequence?.Kill();
+
+        if (idleEntranceRoutine != null)
+            StopCoroutine(idleEntranceRoutine);
     }
 
     private void Start()
@@ -126,6 +137,65 @@ public class GameUI : MonoBehaviour
         ShowIdle();
         PlayAnimation(titleText);
         PlayAnimation(restartText);
+    }
+
+    private void PlayIdleButtonsEntrance()
+    {
+        if (idleEntranceRoutine != null)
+            StopCoroutine(idleEntranceRoutine);
+
+        idleEntranceSequence?.Kill();
+
+        SetButtonScaleZero(playButton);
+        SetButtonScaleZero(collectionButton);
+        SetButtonScaleZero(settingsButton);
+
+        idleEntranceRoutine = StartCoroutine(PlayIdleButtonsEntranceRoutine());
+    }
+
+    private IEnumerator PlayIdleButtonsEntranceRoutine()
+    {
+        yield return null;
+
+        float stagger = idleEntranceDuration * 0.5f;
+
+        idleEntranceSequence = DOTween.Sequence().SetUpdate(true);
+
+        idleEntranceSequence.AppendCallback(() => TriggerButtonEntrance(playButton));
+        idleEntranceSequence.AppendInterval(stagger);
+        idleEntranceSequence.AppendCallback(() => TriggerButtonEntrance(collectionButton));
+        idleEntranceSequence.AppendInterval(stagger);
+        idleEntranceSequence.AppendCallback(() => TriggerButtonEntrance(settingsButton));
+    }
+
+    private void SetButtonScaleZero(Button button)
+    {
+        if (button == null) return;
+
+        RectTransform rt = button.GetComponent<RectTransform>();
+        rt.DOKill();
+        rt.localScale = Vector3.zero;
+    }
+
+    private void TriggerButtonEntrance(Button button)
+    {
+        if (button == null) return;
+
+        EventBus<IdleEnteranceEvent>.Publish(new IdleEnteranceEvent());
+
+        ButtonAnimator animator = button.GetComponent<ButtonAnimator>();
+
+        if (animator != null)
+        {
+            animator.PlayEntrance(idleEntranceDuration, idleEntranceEase);
+        }
+        else
+        {
+            RectTransform rt = button.GetComponent<RectTransform>();
+            rt.DOKill();
+            rt.localScale = Vector3.zero;
+            rt.DOScale(1f, idleEntranceDuration).SetEase(idleEntranceEase);
+        }
     }
 
     private void AddButtonSound(Button button)
@@ -361,6 +431,7 @@ public class GameUI : MonoBehaviour
         hudPanel?.SetActive(false);
         gameOverPanel?.SetActive(false);
         SetText(idleHighScoreText, $"{cachedHighScore}");
+        PlayIdleButtonsEntrance();
     }
 
     private static void SetText(TextMeshProUGUI label, string value)

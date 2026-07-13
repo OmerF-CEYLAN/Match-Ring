@@ -24,6 +24,8 @@ public class AudioManager : MonoBehaviour
     [Header("Button Click Sound")]
     [SerializeField] private AudioClip clickSound;
 
+    [SerializeField] AudioClip idleEnteranceSound;
+
     public float MusicVolume { get; private set; }
     public float SFXVolume { get; private set; }
     public bool IsMusicMuted { get; private set; }
@@ -39,6 +41,7 @@ public class AudioManager : MonoBehaviour
     private EventBinding<PerfectMatchSFXEvent> perfectMatchSFXBinding;
     private EventBinding<ComboIncreasedEvent> comboIncreasedBinding;
     private EventBinding<ButtonClickedEvent> buttonClickedBinding;
+    private EventBinding<IdleEnteranceEvent> idleEnteranceBinding;
 
     private const string KeyMusicVolume = "Audio_MusicVol";
     private const string KeySFXVolume = "Audio_SFXVol";
@@ -74,6 +77,7 @@ public class AudioManager : MonoBehaviour
         perfectMatchSFXBinding = new EventBinding<PerfectMatchSFXEvent>(HandlePerfectMatchSFX);
         comboIncreasedBinding = new EventBinding<ComboIncreasedEvent>(HandleComboIncreased);
         buttonClickedBinding = new EventBinding<ButtonClickedEvent>(HandleButtonClicked);
+        idleEnteranceBinding = new EventBinding<IdleEnteranceEvent>(HandleIdleEnterance);
 
         EventBus<GameOverEvent>.Subscribe(gameOverBinding);
         EventBus<PlaySFXEvent>.Subscribe(playSFXBinding);
@@ -81,6 +85,7 @@ public class AudioManager : MonoBehaviour
         EventBus<PerfectMatchSFXEvent>.Subscribe(perfectMatchSFXBinding);
         EventBus<ComboIncreasedEvent>.Subscribe(comboIncreasedBinding);
         EventBus<ButtonClickedEvent>.Subscribe(buttonClickedBinding);
+        EventBus<IdleEnteranceEvent>.Subscribe(idleEnteranceBinding);
     }
 
     private void OnDisable()
@@ -91,6 +96,7 @@ public class AudioManager : MonoBehaviour
         EventBus<PerfectMatchSFXEvent>.Unsubscribe(perfectMatchSFXBinding);
         EventBus<ComboIncreasedEvent>.Unsubscribe(comboIncreasedBinding);
         EventBus<ButtonClickedEvent>.Unsubscribe(buttonClickedBinding);
+        EventBus<IdleEnteranceEvent>.Unsubscribe(idleEnteranceBinding);
     }
 
     private void HandleGameOver(GameOverEvent e)
@@ -116,6 +122,11 @@ public class AudioManager : MonoBehaviour
     private void HandleButtonClicked()
     {
         PlaySFX(clickSound);
+    }
+    
+    private void HandleIdleEnterance()
+    {
+        PlaySFX(idleEnteranceSound);
     }
 
     private void HandlePlaySFX(PlaySFXEvent e)

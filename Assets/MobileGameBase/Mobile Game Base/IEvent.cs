@@ -143,3 +143,5 @@ public struct ButtonClickedEvent : IEvent
 
 public struct TutorialStartedEvent : IEvent{ }
 public struct TutorialCompletedEvent : IEvent { }
+
+public struct IdleEnteranceEvent : IEvent { }
