@@ -58,4 +58,9 @@ public class ComboManager : MonoBehaviour
         return currentCombo;
     }
 
+    public int GetCombo()
+    {
+        return currentCombo;
+    }
+
 }

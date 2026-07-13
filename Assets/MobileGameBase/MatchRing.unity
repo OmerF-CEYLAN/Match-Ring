@@ -7272,7 +7272,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eff94bf6f7b75d4bb0db4060e0adee5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delayForNextRound: 1.5
+  currentDelayForNextRound: 0
+  minDelayForNextRound: 0.5
+  maxDelayForNextRound: 1.5
   holdMiniGameSource: {fileID: 1227748360}
   tapMiniGameSource: {fileID: 339326036}
   comboManager: {fileID: 9090951479376863185}

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class MatchItemsGameManager : GameManager
 {
     [Header("Hold Game Settings")]
-    [SerializeField] private float delayForNextRound = 1.5f;
+    [SerializeField] private float currentDelayForNextRound, minDelayForNextRound, maxDelayForNextRound = 1.5f;
 
     [SerializeField] MonoBehaviour holdMiniGameSource;
     [SerializeField] MonoBehaviour tapMiniGameSource;
@@ -40,6 +40,8 @@ public class MatchItemsGameManager : GameManager
     {
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 0;
+
+        ResetRoundDelay();
     }
 
     protected override void OnDestroy()
@@ -67,21 +69,24 @@ public class MatchItemsGameManager : GameManager
             EventBus<ShakeEvent>.Publish(new ShakeEvent());
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 3 });
             EventBus<PerfectMatchSFXEvent>.Publish(new PerfectMatchSFXEvent());
-            OnSuccessfulMatch();
             PerfectMatch();
             AddScoreWithComboMultiplier(3);
+            DecreaseRoundDelay();
+            OnSuccessfulMatch();
         }
         else if (differenceRate <= 20f)
         {
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 1 });
             EventBus<ComboFinishedEvent>.Publish(new ComboFinishedEvent());
-            OnSuccessfulMatch();
             AddScore(1);
+            ResetRoundDelay();
+            OnSuccessfulMatch();
         }
         else
         {
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 0 });
             EventBus<ComboFinishedEvent>.Publish(new ComboFinishedEvent());
+            ResetRoundDelay();
             StartCoroutine(TriggerGameOverDelayed());
         }
     }
@@ -102,6 +107,21 @@ public class MatchItemsGameManager : GameManager
     void PerfectMatch()
     {
         EventBus<PerfectMatchEvent>.Publish(new PerfectMatchEvent());
+    }
+
+    void DecreaseRoundDelay()
+    {
+        float delay = maxDelayForNextRound - (0.1f * comboManager.GetComboMultiplier());
+
+        if(delay < minDelayForNextRound)
+            delay = minDelayForNextRound;
+
+        currentDelayForNextRound = delay;
+    }
+
+    void ResetRoundDelay()
+    {
+        currentDelayForNextRound = maxDelayForNextRound;
     }
 
     void SelectRandomMinigame()
@@ -129,7 +149,7 @@ public class MatchItemsGameManager : GameManager
 
     IEnumerator SelectRandomMinigameDelayed()
     {
-        yield return new WaitForSeconds(delayForNextRound);
+        yield return new WaitForSeconds(currentDelayForNextRound);
 
         SelectRandomMinigame();
     }
@@ -148,11 +168,13 @@ public class MatchItemsGameManager : GameManager
         tapMiniGameSource.gameObject.SetActive(false);
         holdMiniGameSource.gameObject.SetActive(false);
         currentMinigame = null;
+
+        ResetRoundDelay();
     }
 
     IEnumerator TriggerGameOverDelayed()
     {
-        yield return new WaitForSeconds(delayForNextRound);
+        yield return new WaitForSeconds(currentDelayForNextRound);
         TriggerGameOver();
     }
 
