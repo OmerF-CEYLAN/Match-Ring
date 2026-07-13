@@ -1032,6 +1032,7 @@ MonoBehaviour:
   speed: 0.3
   speedUpRate: 0.02
   toleranceRadius: 250
+  punchScaleAmount: 0.5
   toleranceFraction: 0.3
 --- !u!1 &370998412
 GameObject:
@@ -2805,6 +2806,7 @@ MonoBehaviour:
   initialSpeed: 2
   speed: 1.5
   speedUpRate: 0.1
+  punchScaleAmount: 0.5
 --- !u!1 &1310073592
 GameObject:
   m_ObjectHideFlags: 0

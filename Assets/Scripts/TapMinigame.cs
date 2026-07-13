@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
 
     [SerializeField] Transform spawnRight, spawnLeft, spawnTop, spawnBottom;
 
-    [SerializeField] float initialSpeed, speed, speedUpRate, toleranceRadius;
+    [SerializeField] float initialSpeed, speed, speedUpRate, toleranceRadius,punchScaleAmount;
     [SerializeField] float toleranceFraction = 0.1f;
 
     private void OnEnable()
@@ -83,6 +84,9 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
 
         dynamicItem.SetSize(staticItem.transform.localScale);
         dynamicItem.SetPosition(staticItem.transform.position);
+
+        RectTransform rect = dynamicItem.GetComponent<RectTransform>();
+        rect.DOPunchScale(Vector3.one * punchScaleAmount, 0.3f);
     }
 
     void HideStaticItem(bool hide)

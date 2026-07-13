@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Diagnostics.SymbolStore;
@@ -21,7 +22,7 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
     [SerializeField] MonoBehaviour symbolRepositorySource;
     ISymbolReader symbolReader;
 
-    [SerializeField] float initialSpeed, speed,speedUpRate;
+    [SerializeField] float initialSpeed, speed,speedUpRate, punchScaleAmount;
 
 
     private void OnEnable()
@@ -85,6 +86,9 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
     {
         HideStaticItem(true);
         dynamicItem.SetSize(staticItem.transform.localScale);
+
+        RectTransform rect = dynamicItem.GetComponent<RectTransform>();
+        rect.DOPunchScale(Vector3.one * punchScaleAmount, 0.3f);
     }
 
     void HideStaticItem(bool hide)
