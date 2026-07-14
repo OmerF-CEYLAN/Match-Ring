@@ -2330,6 +2330,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 945074729}
+  - component: {fileID: 945074730}
   m_Layer: 5
   m_Name: SettingsPanel
   m_TagString: Untagged
@@ -2364,6 +2365,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &945074730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945074728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da2120ce9acaf3f4390e02acdd3f62b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchAmount: 0.15
+  duration: 0.35
+  vibrato: 6
+  elasticity: 0.8
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -4747,6 +4764,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2015673264}
   - component: {fileID: 2015673265}
+  - component: {fileID: 2015673266}
   m_Layer: 5
   m_Name: ItemCollectionPanel
   m_TagString: Untagged
@@ -4789,6 +4807,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19122504bd5505f4ebd69f0412b6abca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2015673266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015673263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da2120ce9acaf3f4390e02acdd3f62b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchAmount: 0.15
+  duration: 0.35
+  vibrato: 6
+  elasticity: 0.8
 --- !u!1 &2040677054
 GameObject:
   m_ObjectHideFlags: 0
@@ -6499,6 +6533,7 @@ MonoBehaviour:
   defaultMusicVolume: 0.2
   defaultSFXVolume: 0.7
   clickSound: {fileID: 8300000, guid: 09f8dc09efedc414784e7ba556669245, type: 3}
+  idleEnteranceSound: {fileID: 0}
 --- !u!222 &5987011975070478213
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6881,6 +6916,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1339092896518678850}
   - component: {fileID: 7272617328158692918}
+  - component: {fileID: 7272617328158692919}
   m_Layer: 5
   m_Name: IdlePanel
   m_TagString: Untagged
@@ -6900,6 +6936,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19122504bd5505f4ebd69f0412b6abca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7272617328158692919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7272617328158692917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da2120ce9acaf3f4390e02acdd3f62b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchAmount: 0.15
+  duration: 0.35
+  vibrato: 6
+  elasticity: 0.8
 --- !u!114 &7581563365992958608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7125,6 +7177,8 @@ MonoBehaviour:
   sfxToggleButton: {fileID: 1424244903}
   toggleOn: {fileID: 21300000, guid: d771b864f5c28d647b154b5fdb969de0, type: 3}
   toggleOff: {fileID: 21300000, guid: 56664b71ed8038b42b162361e0d62916, type: 3}
+  idleEntranceDuration: 0.5
+  idleEntranceEase: 27
 --- !u!222 &8435013317129662960
 CanvasRenderer:
   m_ObjectHideFlags: 0
