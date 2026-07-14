@@ -78,6 +78,7 @@ public class MatchItemsGameManager : GameManager
         {
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 1 });
             EventBus<ComboFinishedEvent>.Publish(new ComboFinishedEvent());
+            GoodMatch();
             AddScore(1);
             ResetRoundDelay();
             OnSuccessfulMatch();
@@ -86,6 +87,7 @@ public class MatchItemsGameManager : GameManager
         {
             EventBus<AccuricyTextEvent>.Publish(new AccuricyTextEvent { score = 0 });
             EventBus<ComboFinishedEvent>.Publish(new ComboFinishedEvent());
+            MissMatch();
             ResetRoundDelay();
             StartCoroutine(TriggerGameOverDelayed());
         }
@@ -102,6 +104,16 @@ public class MatchItemsGameManager : GameManager
     {
         EventBus<SuccessfulMatchEvent>.Publish(new SuccessfulMatchEvent());
         StartCoroutine(SelectRandomMinigameDelayed());
+    }
+
+    void MissMatch()
+    {
+        EventBus<MissMatchSFXEvent>.Publish(new MissMatchSFXEvent());
+    }
+
+    void GoodMatch()
+    {
+        EventBus<GoodMatchSFXEvent>.Publish(new GoodMatchSFXEvent());
     }
 
     void PerfectMatch()

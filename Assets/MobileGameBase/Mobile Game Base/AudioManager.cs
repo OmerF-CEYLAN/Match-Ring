@@ -4,10 +4,12 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
-
+    
     [Header("Music")]
     [SerializeField] private AudioClip backgroundMusic;
     [SerializeField] private AudioClip gameOverStinger;
+    [SerializeField] private AudioClip missMatchEffect;
+    [SerializeField] private AudioClip goodMatchEffect;
     [SerializeField] private AudioClip perfectMatchEffect;
     [SerializeField] private float fadeDuration = 0.5f;
 
@@ -39,6 +41,8 @@ public class AudioManager : MonoBehaviour
     private EventBinding<PlaySFXEvent> playSFXBinding;
     private EventBinding<PlayMusicEvent> playMusicBinding;
     private EventBinding<PerfectMatchSFXEvent> perfectMatchSFXBinding;
+    private EventBinding<GoodMatchSFXEvent> goodMatchSFXBinding;
+    private EventBinding<MissMatchSFXEvent> missMatchSFXBinding;
     private EventBinding<ComboIncreasedEvent> comboIncreasedBinding;
     private EventBinding<ButtonClickedEvent> buttonClickedBinding;
     private EventBinding<IdleEnteranceEvent> idleEnteranceBinding;
@@ -75,6 +79,8 @@ public class AudioManager : MonoBehaviour
         playSFXBinding = new EventBinding<PlaySFXEvent>(HandlePlaySFX);
         playMusicBinding = new EventBinding<PlayMusicEvent>(HandlePlayMusic);
         perfectMatchSFXBinding = new EventBinding<PerfectMatchSFXEvent>(HandlePerfectMatchSFX);
+        goodMatchSFXBinding = new EventBinding<GoodMatchSFXEvent>(HandleGoodMatchSFX);
+        missMatchSFXBinding = new EventBinding<MissMatchSFXEvent>(HandleMissMatchSFX);
         comboIncreasedBinding = new EventBinding<ComboIncreasedEvent>(HandleComboIncreased);
         buttonClickedBinding = new EventBinding<ButtonClickedEvent>(HandleButtonClicked);
         idleEnteranceBinding = new EventBinding<IdleEnteranceEvent>(HandleIdleEnterance);
@@ -83,6 +89,8 @@ public class AudioManager : MonoBehaviour
         EventBus<PlaySFXEvent>.Subscribe(playSFXBinding);
         EventBus<PlayMusicEvent>.Subscribe(playMusicBinding);
         EventBus<PerfectMatchSFXEvent>.Subscribe(perfectMatchSFXBinding);
+        EventBus<GoodMatchSFXEvent>.Subscribe(goodMatchSFXBinding);
+        EventBus<MissMatchSFXEvent>.Subscribe(missMatchSFXBinding);
         EventBus<ComboIncreasedEvent>.Subscribe(comboIncreasedBinding);
         EventBus<ButtonClickedEvent>.Subscribe(buttonClickedBinding);
         EventBus<IdleEnteranceEvent>.Subscribe(idleEnteranceBinding);
@@ -94,6 +102,8 @@ public class AudioManager : MonoBehaviour
         EventBus<PlaySFXEvent>.Unsubscribe(playSFXBinding);
         EventBus<PlayMusicEvent>.Unsubscribe(playMusicBinding);
         EventBus<PerfectMatchSFXEvent>.Unsubscribe(perfectMatchSFXBinding);
+        EventBus<GoodMatchSFXEvent>.Unsubscribe(goodMatchSFXBinding);
+        EventBus<MissMatchSFXEvent>.Unsubscribe(missMatchSFXBinding);
         EventBus<ComboIncreasedEvent>.Unsubscribe(comboIncreasedBinding);
         EventBus<ButtonClickedEvent>.Unsubscribe(buttonClickedBinding);
         EventBus<IdleEnteranceEvent>.Unsubscribe(idleEnteranceBinding);
@@ -144,7 +154,17 @@ public class AudioManager : MonoBehaviour
 
     private void HandlePerfectMatchSFX()
     {
-        //PlaySFX(perfectMatchEffect);
+        PlaySFX(perfectMatchEffect);
+    } 
+    
+    private void HandleGoodMatchSFX()
+    {
+        PlaySFX(goodMatchEffect);
+    }
+    
+    private void HandleMissMatchSFX()
+    {
+        PlaySFX(missMatchEffect);
     }
 
     private void HandleComboIncreased(ComboIncreasedEvent e)

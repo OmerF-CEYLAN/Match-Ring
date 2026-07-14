@@ -110,6 +110,8 @@ public struct AccuricyTextEvent : IEvent
 }
 
 public struct PerfectMatchEvent : IEvent { }
+public struct GoodMatchSFXEvent : IEvent { }
+public struct MissMatchSFXEvent : IEvent { }
 
 
 public struct PerfectMatchSFXEvent : IEvent
