@@ -119,6 +119,12 @@ public class MatchItemsGameManager : GameManager
     void PerfectMatch()
     {
         EventBus<PerfectMatchEvent>.Publish(new PerfectMatchEvent());
+        RequestVibration();
+    }
+
+    void RequestVibration()
+    {
+        EventBus<VibrationEvent>.Publish(new VibrationEvent());
     }
 
     void DecreaseRoundDelay()

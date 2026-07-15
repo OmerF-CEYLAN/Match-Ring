@@ -3,6 +3,12 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using System.Collections;
+
+public enum Toggle
+{
+    Sound,Music,Vibration
+}
+
 public class GameUI : MonoBehaviour
 {
     [Header("Panels")]
@@ -28,7 +34,6 @@ public class GameUI : MonoBehaviour
     [Header("Buttons")]
     [SerializeField] private Button restartButton;
     [SerializeField] private Button playButton;
-    [SerializeField] private Button mainMenuButton;
 
     [Header("Item Colleciton")]
     [SerializeField] GameObject collectionPanel;
@@ -39,10 +44,12 @@ public class GameUI : MonoBehaviour
     [Header("Settings")]
     [SerializeField] GameObject settingsPanel;
     [SerializeField] Button settingsButton;
+    [SerializeField] Button mainMenuButton;
     [SerializeField] Button inGameSettingsButton;
     [SerializeField] Button closeSettingsButton;
     [SerializeField] Button musicToggleButton;
     [SerializeField] Button sfxToggleButton;
+    [SerializeField] Button vibrationToggleButton;
     [SerializeField] Sprite toggleOn, toggleOff;
 
     [Header("Idle Buttons Entrance")]
@@ -124,6 +131,7 @@ public class GameUI : MonoBehaviour
         closeSettingsButton?.onClick.AddListener(CloseSettings);
         musicToggleButton?.onClick.AddListener(OnMusicToggleClicked);
         sfxToggleButton?.onClick.AddListener(OnSFXToggleClicked);
+        vibrationToggleButton?.onClick.AddListener(OnVibrationToggleClicked);
         mainMenuButton?.onClick.AddListener(OnMainMenuClicked);
 
         if (GameManager.Instance != null)
@@ -228,6 +236,7 @@ public class GameUI : MonoBehaviour
         AddButtonSound(closeSettingsButton);
         AddButtonSound(musicToggleButton);
         AddButtonSound(sfxToggleButton);
+        AddButtonSound(vibrationToggleButton);
         AddButtonSound(mainMenuButton);
     }
 
@@ -257,6 +266,7 @@ public class GameUI : MonoBehaviour
     void OpenSettings()
     {
         RefreshSettingsUI();
+        mainMenuButton.gameObject.SetActive(GameManager.Instance.IsPlaying);
         settingsPanel.SetActive(true);
     }
 
@@ -267,13 +277,19 @@ public class GameUI : MonoBehaviour
 
     void OnMusicToggleClicked()
     {
-        AudioManager.Instance?.ToggleMusicMute();
+        EventBus<ToggleSettingEvent>.Publish(new ToggleSettingEvent { toggleType = Toggle.Music });
         RefreshSettingsUI();
     }
 
     void OnSFXToggleClicked()
     {
-        AudioManager.Instance?.ToggleSFXMute();
+        EventBus<ToggleSettingEvent>.Publish(new ToggleSettingEvent { toggleType = Toggle.Sound });
+        RefreshSettingsUI();
+    }
+
+    void OnVibrationToggleClicked()
+    {
+        EventBus<ToggleSettingEvent>.Publish(new ToggleSettingEvent { toggleType = Toggle.Vibration });
         RefreshSettingsUI();
     }
 
@@ -283,6 +299,7 @@ public class GameUI : MonoBehaviour
 
         musicToggleButton.GetComponent<Image>().sprite = AudioManager.Instance.IsMusicMuted ? toggleOff : toggleOn;
         sfxToggleButton.GetComponent<Image>().sprite = AudioManager.Instance.IsSFXMuted ? toggleOff : toggleOn;
+        vibrationToggleButton.GetComponent<Image>().sprite = VibrationManager.Instance.IsVibrationDisabled ? toggleOff : toggleOn;
     }
 
     private void HandleGameStarted()
@@ -430,6 +447,7 @@ public class GameUI : MonoBehaviour
     private void ShowIdle()
     {
         idlePanel?.SetActive(true);
+        settingsPanel?.SetActive(false);
         hudPanel?.SetActive(false);
         gameOverPanel?.SetActive(false);
         SetText(idleHighScoreText, $"{cachedHighScore}");

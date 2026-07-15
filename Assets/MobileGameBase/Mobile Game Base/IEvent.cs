@@ -147,3 +147,10 @@ public struct TutorialStartedEvent : IEvent{ }
 public struct TutorialCompletedEvent : IEvent { }
 
 public struct IdleEnteranceEvent : IEvent { }
+
+public struct ToggleSettingEvent : IEvent
+{
+    public Toggle toggleType;
+}
+
+public struct VibrationEvent : IEvent { }

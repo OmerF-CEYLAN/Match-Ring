@@ -46,6 +46,7 @@ public class AudioManager : MonoBehaviour
     private EventBinding<ComboIncreasedEvent> comboIncreasedBinding;
     private EventBinding<ButtonClickedEvent> buttonClickedBinding;
     private EventBinding<IdleEnteranceEvent> idleEnteranceBinding;
+    private EventBinding<ToggleSettingEvent> toggleSettingBinding;
 
     private const string KeyMusicVolume = "Audio_MusicVol";
     private const string KeySFXVolume = "Audio_SFXVol";
@@ -84,6 +85,7 @@ public class AudioManager : MonoBehaviour
         comboIncreasedBinding = new EventBinding<ComboIncreasedEvent>(HandleComboIncreased);
         buttonClickedBinding = new EventBinding<ButtonClickedEvent>(HandleButtonClicked);
         idleEnteranceBinding = new EventBinding<IdleEnteranceEvent>(HandleIdleEnterance);
+        toggleSettingBinding = new EventBinding<ToggleSettingEvent>(ToggleSettings);
 
         EventBus<GameOverEvent>.Subscribe(gameOverBinding);
         EventBus<PlaySFXEvent>.Subscribe(playSFXBinding);
@@ -94,6 +96,7 @@ public class AudioManager : MonoBehaviour
         EventBus<ComboIncreasedEvent>.Subscribe(comboIncreasedBinding);
         EventBus<ButtonClickedEvent>.Subscribe(buttonClickedBinding);
         EventBus<IdleEnteranceEvent>.Subscribe(idleEnteranceBinding);
+        EventBus<ToggleSettingEvent>.Subscribe(toggleSettingBinding);
     }
 
     private void OnDisable()
@@ -107,6 +110,7 @@ public class AudioManager : MonoBehaviour
         EventBus<ComboIncreasedEvent>.Unsubscribe(comboIncreasedBinding);
         EventBus<ButtonClickedEvent>.Unsubscribe(buttonClickedBinding);
         EventBus<IdleEnteranceEvent>.Unsubscribe(idleEnteranceBinding);
+        EventBus<ToggleSettingEvent>.Unsubscribe(toggleSettingBinding);
     }
 
     private void HandleGameOver(GameOverEvent e)
@@ -255,14 +259,16 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    public void ToggleMusicMute()
+    public void ToggleSettings(ToggleSettingEvent e)
     {
-        SetMusicMute(!IsMusicMuted);
-    }
-
-    public void ToggleSFXMute()
-    {
-        SetSFXMute(!IsSFXMuted);
+        if (e.toggleType == Toggle.Sound)
+        {
+            SetSFXMute(!IsSFXMuted);
+        }
+        else if(e.toggleType == Toggle.Music)
+        {
+            SetMusicMute(!IsMusicMuted);
+        }
     }
 
     public void SetMusicMute(bool muted)
