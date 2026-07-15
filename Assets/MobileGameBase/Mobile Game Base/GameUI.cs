@@ -209,11 +209,13 @@ public class GameUI : MonoBehaviour
     private void HandleTutorialStarted()
     {
         mainMenuButton?.gameObject.SetActive(false);
+        scoreText.enabled = false;
     }
 
     private void HandleTutorialCompleted()
     {
         mainMenuButton?.gameObject.SetActive(true);
+        scoreText.enabled = true;
     }
     void SetUpAllButtonsClickSound()
     {

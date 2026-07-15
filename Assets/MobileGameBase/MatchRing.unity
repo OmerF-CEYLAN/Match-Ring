@@ -7848,8 +7848,9 @@ MonoBehaviour:
   hudPanel: {fileID: 8638356075637973461}
   instructionText: {fileID: 2056857237}
   feedbackText: {fileID: 1050148405}
-  holdInstruction: Hold and Release at the Riight Time!
+  holdInstruction: Hold and Release at the Right Time!
   tapInstruction: Tap at the Right Time!
+  failInstruction: You missed. Try again!
   perfectThreshold: 10
   retryDelay: 1
   delayBeforeContinuePrompt: 1.5

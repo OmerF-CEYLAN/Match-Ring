@@ -24,6 +24,7 @@ public class TutorialManager : MonoBehaviour
 
     [SerializeField] string holdInstruction = "Basýlý tut, tam zamanýnda býrak!";
     [SerializeField] string tapInstruction = "Doðru zamanda dokun!";
+    [SerializeField] string failInstruction = "You missed. Try again!";
 
     [SerializeField] float perfectThreshold = 10f;
     [SerializeField] float retryDelay = 1f;
@@ -110,8 +111,16 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator RetryCurrentStep()
     {
+        EventBus<MissMatchSFXEvent>.Publish(new MissMatchSFXEvent());
+        SetInstructionText(failInstruction);
         yield return new WaitForSeconds(retryDelay);
         currentMiniGame.BeginRound();
+        yield return new WaitForSeconds(0.5f);
+
+        if (currentStep == Step.Hold)
+            SetInstructionText(holdInstruction);
+        else
+            SetInstructionText(tapInstruction);
     }
 
     void OnStepSuccess()
@@ -125,6 +134,7 @@ public class TutorialManager : MonoBehaviour
     IEnumerator OnPerfectSuccess()
     {
         EventBus<PerfectMatchEvent>.Publish(new PerfectMatchEvent());
+        EventBus<PerfectMatchSFXEvent>.Publish(new PerfectMatchSFXEvent());
 
         yield return new WaitForSeconds(0.25f);
 
