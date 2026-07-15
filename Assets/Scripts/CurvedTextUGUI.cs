@@ -71,6 +71,10 @@ public class CurvedTextUGUI : MonoBehaviour
             textComponent.ForceMeshUpdate();
 
             TMP_TextInfo textInfo = textComponent.textInfo;
+
+            if (textInfo == null || textInfo.meshInfo == null)
+                return;
+
             int characterCount = textInfo.characterCount;
 
             if (characterCount == 0) return;
@@ -96,7 +100,14 @@ public class CurvedTextUGUI : MonoBehaviour
                 int materialIndex = charInfo.materialReferenceIndex;
                 int vertexIndex = charInfo.vertexIndex;
 
+                // Güvenlik kontrolü: materialIndex ve vertex aralýðý mesh ile tutarlý mý?
+                if (materialIndex < 0 || materialIndex >= textInfo.meshInfo.Length)
+                    continue;
+
                 Vector3[] sourceVertices = textInfo.meshInfo[materialIndex].vertices;
+
+                if (sourceVertices == null || vertexIndex + 3 >= sourceVertices.Length)
+                    continue;
 
                 Vector3 charMidBaseline = new Vector3(
                     (sourceVertices[vertexIndex + 0].x + sourceVertices[vertexIndex + 2].x) * 0.5f,
@@ -130,6 +141,8 @@ public class CurvedTextUGUI : MonoBehaviour
 
             for (int i = 0; i < textInfo.meshInfo.Length; i++)
             {
+                if (textInfo.meshInfo[i].mesh == null) continue;
+
                 textInfo.meshInfo[i].mesh.vertices = textInfo.meshInfo[i].vertices;
                 textComponent.UpdateGeometry(textInfo.meshInfo[i].mesh, i);
             }
