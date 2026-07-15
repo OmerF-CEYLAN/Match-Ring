@@ -24,8 +24,8 @@ public class GameUI : MonoBehaviour
     [Header("Game Over Screen")]
     [SerializeField] private TextMeshProUGUI gameOverScoreText;
     [SerializeField] private TextMeshProUGUI gameOverHighScoreText;
-    [SerializeField] private TextMeshProUGUI restartText;
     [SerializeField] private GameObject newRecordObject;
+    [SerializeField] private Button gameOverMainMenuButton;
 
     [Header("Idle Screen")]
     [SerializeField] private TextMeshProUGUI idleHighScoreText;
@@ -133,6 +133,7 @@ public class GameUI : MonoBehaviour
         sfxToggleButton?.onClick.AddListener(OnSFXToggleClicked);
         vibrationToggleButton?.onClick.AddListener(OnVibrationToggleClicked);
         mainMenuButton?.onClick.AddListener(OnMainMenuClicked);
+        gameOverMainMenuButton?.onClick.AddListener(OnMainMenuClicked);
 
         if (GameManager.Instance != null)
             cachedHighScore = GameManager.Instance.HighScore;
@@ -144,7 +145,6 @@ public class GameUI : MonoBehaviour
 
         ShowIdle();
         PlayAnimation(titleText);
-        PlayAnimation(restartText);
     }
 
     private void PlayIdleButtonsEntrance()
@@ -238,6 +238,7 @@ public class GameUI : MonoBehaviour
         AddButtonSound(sfxToggleButton);
         AddButtonSound(vibrationToggleButton);
         AddButtonSound(mainMenuButton);
+        AddButtonSound(gameOverMainMenuButton);
     }
 
     void OnPlayClicked()
