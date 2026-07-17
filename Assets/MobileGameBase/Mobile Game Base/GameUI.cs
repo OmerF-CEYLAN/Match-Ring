@@ -334,6 +334,8 @@ public class GameUI : MonoBehaviour
         if (e.combo < 2)
             return;
 
+        ToggleScoreRainbowEffect(true);
+
         comboText.gameObject.SetActive(true);
         comboText.text = $"x{e.combo}";
 
@@ -367,6 +369,45 @@ public class GameUI : MonoBehaviour
                 comboText.color = Color.white;
                 comboText.rectTransform.localScale = Vector3.one;
             });
+
+        ToggleScoreRainbowEffect(false);
+    }
+
+    private void ToggleScoreRainbowEffect(bool isActive)
+    {
+        if (scoreText == null) return;
+
+        RainbowWaveText effect = scoreText.GetComponent<RainbowWaveText>();
+        if (effect != null)
+        {
+            effect.enabled = isActive;
+
+            if (!isActive)
+            {
+                scoreText.color = Color.white;
+
+                scoreText.rectTransform.DOKill();
+                scoreText.rectTransform.localScale = Vector3.one;
+            }
+            else
+            {
+                scoreText.DOKill();
+                scoreText.rectTransform.DOKill();
+
+                scoreText.rectTransform.localScale = Vector3.one;
+
+                Sequence seq = DOTween.Sequence();
+
+                seq.Join(
+                    scoreText.rectTransform
+                    .DOScale(1.2f, 0.125f)
+                    .SetLoops(2, LoopType.Yoyo)
+                    .OnComplete(() =>
+                        scoreText.rectTransform.DOScale(1.3f, 0.5f).SetLoops(-1, LoopType.Yoyo)
+                    )
+                );
+            }
+        }
     }
 
     private void HandleScoreChanged(ScoreChangedEvent e)
@@ -390,11 +431,6 @@ public class GameUI : MonoBehaviour
             )
         );
 
-        seq.Join(
-            scoreText.rectTransform
-                .DOScale(1.2f, 0.125f)
-                .SetLoops(2, LoopType.Yoyo)
-        );
     }
 
     private void HandleNewHighScore(NewHighScoreEvent e)
