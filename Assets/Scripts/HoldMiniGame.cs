@@ -22,7 +22,7 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
     [SerializeField] MonoBehaviour symbolRepositorySource;
     ISymbolReader symbolReader;
 
-    [SerializeField] float initialSpeed, speed,speedUpRate, punchScaleAmount;
+    [SerializeField] float initialSpeed, maxSpeed,speed,speedUpRate, punchScaleAmount;
 
 
     private void OnEnable()
@@ -123,7 +123,14 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
         HideStaticItem(false);
         dynamicItem.isActive = true;
         dynamicItem.ResetSize();
-        dynamicItem.SetSpeed(initialSpeed + DifficultyManager.Instance.DifficultyLevel * speedUpRate);
+
+        float speedToSet = initialSpeed + DifficultyManager.Instance.DifficultyLevel * speedUpRate;
+
+        if (speedToSet > maxSpeed)
+            speedToSet = maxSpeed;
+        
+        dynamicItem.SetSpeed(speedToSet);
+        
         SetRandomSprite();
         SetStaticRingSize();
         SetRingColor();

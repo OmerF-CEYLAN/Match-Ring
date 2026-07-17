@@ -1105,7 +1105,8 @@ MonoBehaviour:
   spawnBottom: {fileID: 989670891}
   initialSpeed: 0.3
   speed: 0.3
-  speedUpRate: 0.02
+  maxSpeed: 1
+  speedUpRate: 0.05
   toleranceRadius: 250
   punchScaleAmount: 0.5
   toleranceFraction: 0.3
@@ -3493,6 +3494,7 @@ MonoBehaviour:
   dynamicItem: {fileID: 1958249452}
   symbolRepositorySource: {fileID: 336134076}
   initialSpeed: 2
+  maxSpeed: 3.4
   speed: 1.5
   speedUpRate: 0.1
   punchScaleAmount: 0.5
