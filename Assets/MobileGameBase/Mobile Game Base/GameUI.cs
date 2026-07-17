@@ -29,7 +29,7 @@ public class GameUI : MonoBehaviour
 
     [Header("Idle Screen")]
     [SerializeField] private TextMeshProUGUI idleHighScoreText;
-    [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private RectTransform titleRect;
 
     [Header("Buttons")]
     [SerializeField] private Button restartButton;
@@ -144,7 +144,7 @@ public class GameUI : MonoBehaviour
         SetUpAllButtonsClickSound();
 
         ShowIdle();
-        PlayAnimation(titleText);
+        PlayAnimation(titleRect);
     }
 
     private void PlayIdleButtonsEntrance()
@@ -460,15 +460,14 @@ public class GameUI : MonoBehaviour
         if (label != null) label.text = value;
     }
 
-    void PlayAnimation(TextMeshProUGUI textToAnimate)
+    void PlayAnimation(RectTransform rectToAnimate)
     {
-        textToAnimate.DOKill();
+        rectToAnimate.DOKill();
 
         Sequence seq = DOTween.Sequence();
 
         seq.Append(
-            textToAnimate.transform
-                .DOScale(1.3f, 1f)
+            rectToAnimate.DOScale(1.3f, 1f)
                 .SetEase(Ease.InOutSine)
         );
 
