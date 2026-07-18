@@ -113,7 +113,7 @@ public class HoldMiniGame : MonoBehaviour, IMiniGameMode
 
     void SetStaticRingSize()
     {
-        float randSize = UnityEngine.Random.Range(minRingSize.x + 0.5f, maxRingSize.x - 0.1f);
+        float randSize = UnityEngine.Random.Range(minRingSize.x + 1f, maxRingSize.x - 0.1f);
 
         staticItem.transform.localScale = new Vector3(randSize, randSize, 1);
     }

@@ -3489,7 +3489,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minRingSize: {x: 2, y: 2, z: 1}
-  maxRingSize: {x: 5, y: 5, z: 1}
+  maxRingSize: {x: 4.5, y: 4.5, z: 1}
   staticItem: {fileID: 1184016630}
   dynamicItem: {fileID: 1958249452}
   symbolRepositorySource: {fileID: 336134076}
