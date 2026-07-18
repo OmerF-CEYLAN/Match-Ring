@@ -1106,7 +1106,7 @@ MonoBehaviour:
   initialSpeed: 0.3
   speed: 0.3
   maxSpeed: 1
-  speedUpRate: 0.05
+  speedUpRate: 0.025
   toleranceRadius: 250
   punchScaleAmount: 0.5
   toleranceFraction: 0.3
@@ -3496,7 +3496,7 @@ MonoBehaviour:
   initialSpeed: 2
   maxSpeed: 3.4
   speed: 1.5
-  speedUpRate: 0.1
+  speedUpRate: 0.05
   punchScaleAmount: 0.5
 --- !u!1 &1338108152
 GameObject:
@@ -5876,7 +5876,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -355}
-  m_SizeDelta: {x: 500, y: 50}
+  m_SizeDelta: {x: 450, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2056857237
 MonoBehaviour:
@@ -5925,8 +5925,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 45
+  m_fontSizeBase: 45
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

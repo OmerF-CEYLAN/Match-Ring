@@ -47,6 +47,8 @@ public class RingVisualController : MonoBehaviour
     private void HandleHoldStart()
     {
         if (!isActive) return;
+        Debug.Log($"[INPUT_DEBUG] RingVisual HandleHoldStart t={Time.realtimeSinceStartup:F3}");
+
         isHolding = true;
 
         sizeTween?.Kill();
@@ -63,6 +65,8 @@ public class RingVisualController : MonoBehaviour
     private void HandleHoldEnd()
     {
         if (!isActive || !isHolding) return;
+        Debug.Log($"[INPUT_DEBUG] RingVisual HandleHoldEnd t={Time.realtimeSinceStartup:F3}");
+
         isHolding = false;
 
         sizeTween?.Kill();

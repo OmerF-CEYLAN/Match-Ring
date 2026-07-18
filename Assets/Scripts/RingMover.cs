@@ -68,7 +68,14 @@ public class RingMover : MonoBehaviour
     private void HandleOnTap()
     {
         if (!isActive) return;
-        if (Time.unscaledTime - UIClickGuard.LastUIClickTime < 0.15f) return;
+
+        if (Time.unscaledTime - UIClickGuard.LastUIClickTime < 0.15f)
+        {
+            Debug.Log($"[INPUT_DEBUG] Tap BLOCKED by UIClickGuard t={Time.realtimeSinceStartup:F3}");
+            return;
+        }
+
+        Debug.Log($"[INPUT_DEBUG] RingMover HandleOnTap ACCEPTED t={Time.realtimeSinceStartup:F3} pos={transform.position}");
         EventBus<ItemClickedEvent>.Publish(new ItemClickedEvent());
         isItemMoving = false;
     }

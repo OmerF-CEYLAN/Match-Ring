@@ -124,6 +124,7 @@ public class InputManager : MonoBehaviour
         IsHolding = false;
         touchActive = true;
         touchStartedOverBlockingUI = IsOverBlockingUI(position);
+        Debug.Log($"[INPUT_DEBUG] TouchBegan t={Time.realtimeSinceStartup:F3}");
     }
 
     private void OnTouchHeld(Vector2 position)
@@ -139,6 +140,8 @@ public class InputManager : MonoBehaviour
             holdTriggered = true;
             IsHolding = true;
 
+            Debug.Log($"[INPUT_DEBUG] HoldTriggered t={Time.realtimeSinceStartup:F3} heldFor={heldFor:F3}");
+
             OnHoldStart?.Invoke();
             EventBus<HoldStartEvent>.Publish(new HoldStartEvent { screenPosition = TouchStartPosition });
         }
@@ -146,6 +149,8 @@ public class InputManager : MonoBehaviour
 
     private void OnTouchEnded(Vector2 position)
     {
+        Debug.Log($"[INPUT_DEBUG] TouchEnded t={Time.realtimeSinceStartup:F3}");
+
         touchActive = false;
 
         if (touchStartedOverBlockingUI)
@@ -201,12 +206,14 @@ public class InputManager : MonoBehaviour
 
         if (isDoubleTap)
         {
+            Debug.Log($"[INPUT_DEBUG] DoubleTap t={Time.realtimeSinceStartup:F3}");
             OnDoubleTap?.Invoke();
             EventBus<DoubleTapEvent>.Publish(new DoubleTapEvent { screenPosition = position });
             lastTapTime = 0f;
         }
         else
         {
+            Debug.Log($"[INPUT_DEBUG] Tap t={Time.realtimeSinceStartup:F3}");
             OnTap?.Invoke();
             EventBus<TapEvent>.Publish(new TapEvent { screenPosition = position });
             lastTapTime = Time.time;

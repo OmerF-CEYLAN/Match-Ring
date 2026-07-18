@@ -95,7 +95,6 @@ public class MatchItemsGameManager : GameManager
 
     public void AddScoreWithComboMultiplier(int score)
     {
-        Debug.Log(comboManager.GetComboMultiplier());
         int combo = comboManager.GetComboMultiplier();
         AddScore(score * combo);
     }

@@ -52,13 +52,6 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
         symbolReader = symbolRepositorySource as ISymbolReader;
     }
 
-    void CalculateScore()
-    {
-        float difference = Vector3.Distance(staticItem.transform.position, dynamicItem.transform.position);
-        float differenceRate = difference / toleranceRadius * 100f;
-        SendResult(differenceRate);
-    }
-
     void HandlePerfectMatch()
     {
         ShrinkOnPerfectMatch();
@@ -101,7 +94,16 @@ public class TapMinigame : MonoBehaviour, IMiniGameMode
 
     void OnItemClicked()
     {
+        Debug.Log($"[INPUT_DEBUG] TapMinigame OnItemClicked t={Time.realtimeSinceStartup:F3}");
         EndRound();
+    }
+
+    void CalculateScore()
+    {
+        float difference = Vector3.Distance(staticItem.transform.position, dynamicItem.transform.position);
+        float differenceRate = difference / toleranceRadius * 100f;
+        Debug.Log($"[INPUT_DEBUG] Score calculated t={Time.realtimeSinceStartup:F3} rate={differenceRate:F2}");
+        SendResult(differenceRate);
     }
 
     void SendResult(float differenceRate)
