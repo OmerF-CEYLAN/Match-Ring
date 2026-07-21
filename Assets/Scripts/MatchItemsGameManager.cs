@@ -38,7 +38,16 @@ public class MatchItemsGameManager : GameManager
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
+        RefreshRate refreshRate = Screen.currentResolution.refreshRateRatio;
+        double hz = refreshRate.value;
+
+        int targetFrameRate = Mathf.RoundToInt((float)hz);
+
+        if(targetFrameRate > 90)
+        { targetFrameRate = 90; }
+
+        Application.targetFrameRate = targetFrameRate;
+
         QualitySettings.vSyncCount = 0;
 
         ResetRoundDelay();
