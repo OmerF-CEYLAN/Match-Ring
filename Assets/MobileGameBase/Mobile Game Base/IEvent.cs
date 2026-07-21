@@ -154,3 +154,6 @@ public struct ToggleSettingEvent : IEvent
 }
 
 public struct VibrationEvent : IEvent { }
+
+public struct ShowBannerEvent : IEvent { }
+public struct HideBannerEvent : IEvent { }

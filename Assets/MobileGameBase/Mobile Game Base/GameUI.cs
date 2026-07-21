@@ -141,6 +141,8 @@ public class GameUI : MonoBehaviour
         settingsPanel?.SetActive(false);
         collectionPanel?.SetActive(false);
 
+        EventBus<HideBannerEvent>.Publish(new HideBannerEvent());
+
         SetUpAllButtonsClickSound();
 
         ShowIdle();
@@ -257,11 +259,13 @@ public class GameUI : MonoBehaviour
     {
         collectionManager.RefreshAll();
         collectionPanel.SetActive(true);
+        EventBus<ShowBannerEvent>.Publish(new ShowBannerEvent());
     }
 
     void CloseCollection()
     {
         collectionPanel.SetActive(false);
+        EventBus<HideBannerEvent>.Publish(new HideBannerEvent());
     }
 
     void OpenSettings()
