@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
 
     public float CurrentScore { get; private set; }
     public int HighScore { get; private set; }
+    public bool CanUseRewardedContinue { get; protected set; }
     protected virtual string HighScoreKey => "HighScore";
 
     private EventBinding<TapEvent> tapBinding;
@@ -59,6 +60,18 @@ public class GameManager : MonoBehaviour
 
         EventBus<GameStartedEvent>.Publish(new GameStartedEvent());
         EventBus<ScoreChangedEvent>.Publish(new ScoreChangedEvent { currentScore = 0f });
+
+        OnGameStarted_Hook();
+    }
+
+    public void ContinueGame()
+    {
+        if (CurrentState == GameState.Playing) return;
+
+        CurrentState = GameState.Playing;
+
+        EventBus<GameStartedEvent>.Publish(new GameStartedEvent());
+        EventBus<ScoreChangedEvent>.Publish(new ScoreChangedEvent { currentScore = CurrentScore });
 
         OnGameStarted_Hook();
     }
@@ -131,6 +144,15 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
+    public void RewardedContinueGame()
+    {
+        CanUseRewardedContinue = false;
+        CurrentState = GameState.Idle;
+        OnRestart_Hook();
+        ContinueGame();
+        OnRewardedContinueUsed_Hook();
+    }
+
     /// <summary>Wipes the saved high score.</summary>
     public void ResetHighScore()
     {
@@ -148,6 +170,7 @@ public class GameManager : MonoBehaviour
     protected virtual void OnScoreChanged_Hook(float score) { }
     protected virtual void OnRestart_Hook() { }
     protected virtual void OnReturnToMainMenu_Hook() { }
+    protected virtual void OnRewardedContinueUsed_Hook() { }
 
     // ───────────────────────────────────────────────────
     //  High Score

@@ -26,10 +26,14 @@ public class GameUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameOverHighScoreText;
     [SerializeField] private GameObject newRecordObject;
     [SerializeField] private Button gameOverMainMenuButton;
+    [SerializeField] private Button continueButton;
 
     [Header("Idle Screen")]
     [SerializeField] private TextMeshProUGUI idleHighScoreText;
     [SerializeField] private RectTransform titleRect;
+
+    [Header("Input Blocker Panel")]
+    [SerializeField] GameObject inputBlockerPanel;
 
     [Header("Buttons")]
     [SerializeField] private Button restartButton;
@@ -70,6 +74,7 @@ public class GameUI : MonoBehaviour
     private EventBinding<ReturnedToMainMenuEvent> returnedToMainMenuBinding;
     private EventBinding<TutorialStartedEvent> tutorialStartedBinding;
     private EventBinding<TutorialCompletedEvent> tutorialCompletedBinding;
+    private EventBinding<RewardEarnedEvent> rewardEarnedBinding;
 
     private Coroutine idleEntranceRoutine;
 
@@ -85,6 +90,7 @@ public class GameUI : MonoBehaviour
         returnedToMainMenuBinding = new EventBinding<ReturnedToMainMenuEvent>(ShowIdle);
         tutorialStartedBinding = new EventBinding<TutorialStartedEvent>(HandleTutorialStarted);
         tutorialCompletedBinding = new EventBinding<TutorialCompletedEvent>(HandleTutorialCompleted);
+        rewardEarnedBinding = new EventBinding<RewardEarnedEvent>(OnRewardEarned);
 
         EventBus<GameStartedEvent>.Subscribe(gameStartedBinding);
         EventBus<GameOverEvent>.Subscribe(gameOverBinding);
@@ -96,6 +102,7 @@ public class GameUI : MonoBehaviour
         EventBus<ReturnedToMainMenuEvent>.Subscribe(returnedToMainMenuBinding);
         EventBus<TutorialStartedEvent>.Subscribe(tutorialStartedBinding);
         EventBus<TutorialCompletedEvent>.Subscribe(tutorialCompletedBinding);
+        EventBus<RewardEarnedEvent>.Subscribe(rewardEarnedBinding);
 
     }
 
@@ -111,6 +118,7 @@ public class GameUI : MonoBehaviour
         EventBus<ReturnedToMainMenuEvent>.Unsubscribe(returnedToMainMenuBinding);
         EventBus<TutorialStartedEvent>.Unsubscribe(tutorialStartedBinding);
         EventBus<TutorialCompletedEvent>.Unsubscribe(tutorialCompletedBinding);
+        EventBus<RewardEarnedEvent>.Unsubscribe(rewardEarnedBinding);
 
         idleEntranceSequence?.Kill();
 
@@ -121,6 +129,7 @@ public class GameUI : MonoBehaviour
     private void Start()
     {
         restartButton?.onClick.AddListener(OnRestartClicked);
+        continueButton?.onClick.AddListener(OnContinueClicked);
         playButton?.onClick.AddListener(OnPlayClicked);
 
         collectionButton.onClick.AddListener(OpenCollection);
@@ -331,6 +340,8 @@ public class GameUI : MonoBehaviour
 
         SetText(gameOverScoreText, Mathf.FloorToInt(e.finalScore).ToString());
         SetText(gameOverHighScoreText, e.highScore.ToString());
+
+        continueButton.gameObject.SetActive(GameManager.Instance.CanUseRewardedContinue);
     }
 
     void HandleComboIncreased(ComboIncreasedEvent e)
@@ -483,6 +494,22 @@ public class GameUI : MonoBehaviour
     {
         UIClickGuard.LastUIClickTime = Time.unscaledTime;
         GameManager.Instance?.RestartGame();
+    } 
+    
+    private void OnContinueClicked()
+    {
+        inputBlockerPanel.SetActive(true);
+        EventBus<ShowRewardedAdEvent>.Publish(new ShowRewardedAdEvent());
+    }
+
+    void OnRewardEarned(RewardEarnedEvent e)
+    {
+        inputBlockerPanel.SetActive(false);
+
+        if (e.isRewardGiven == false)
+            return;
+
+        GameManager.Instance?.RewardedContinueGame();
     }
 
     private void ShowIdle()

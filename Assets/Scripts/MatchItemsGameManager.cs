@@ -182,11 +182,18 @@ public class MatchItemsGameManager : GameManager
 
     protected override void OnGameStarted_Hook()
     {
+        CanUseRewardedContinue = true;
         if (TutorialManager.Instance != null && !TutorialManager.IsTutorialCompleted)
             TutorialManager.Instance.StartTutorial(SelectRandomMinigame);
         else
             SelectRandomMinigame();
     }
+
+    protected override void OnRewardedContinueUsed_Hook()
+    {
+        CanUseRewardedContinue = false;
+    }
+
     protected override void OnReturnToMainMenu_Hook()
     {
         StopAllCoroutines();

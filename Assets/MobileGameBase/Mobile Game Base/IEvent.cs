@@ -157,3 +157,9 @@ public struct VibrationEvent : IEvent { }
 
 public struct ShowBannerEvent : IEvent { }
 public struct HideBannerEvent : IEvent { }
+
+public struct ShowRewardedAdEvent : IEvent { }
+public struct RewardEarnedEvent : IEvent
+{
+    public bool isRewardGiven;
+}
