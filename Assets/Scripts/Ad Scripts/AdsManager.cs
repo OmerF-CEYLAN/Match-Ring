@@ -2,7 +2,7 @@ using GoogleMobileAds.Api;
 using UnityEngine;
 
 public class AdsManager : MonoBehaviour
-{   
+{
     bool rewardGiven;
     BannerView bannerView;
     RewardedAd rewardedAd;
@@ -10,19 +10,24 @@ public class AdsManager : MonoBehaviour
     string bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111";
     string rewardedAdUnitId = "ca-app-pub-3940256099942544/5224354917";
 
+    bool isMobileAdsInitialized;
+
     EventBinding<ShowBannerEvent> showBannerBinding;
     EventBinding<HideBannerEvent> hideBannerBinding;
     EventBinding<ShowRewardedAdEvent> showRewardedAdBinding;
+    EventBinding<GameOverEvent> gameOverBinding;
 
     private void OnEnable()
     {
         showBannerBinding = new EventBinding<ShowBannerEvent>(ShowBanner);
         hideBannerBinding = new EventBinding<HideBannerEvent>(HideBanner);
         showRewardedAdBinding = new EventBinding<ShowRewardedAdEvent>(ShowRewardedAd);
+        gameOverBinding = new EventBinding<GameOverEvent>(HandleGameOver);
 
         EventBus<ShowBannerEvent>.Subscribe(showBannerBinding);
         EventBus<HideBannerEvent>.Subscribe(hideBannerBinding);
         EventBus<ShowRewardedAdEvent>.Subscribe(showRewardedAdBinding);
+        EventBus<GameOverEvent>.Subscribe(gameOverBinding);
     }
 
     private void OnDisable()
@@ -30,6 +35,7 @@ public class AdsManager : MonoBehaviour
         EventBus<ShowBannerEvent>.Unsubscribe(showBannerBinding);
         EventBus<HideBannerEvent>.Unsubscribe(hideBannerBinding);
         EventBus<ShowRewardedAdEvent>.Unsubscribe(showRewardedAdBinding);
+        EventBus<GameOverEvent>.Unsubscribe(gameOverBinding);
     }
 
     void Start()
@@ -42,6 +48,7 @@ public class AdsManager : MonoBehaviour
                 return;
             }
 
+            isMobileAdsInitialized = true;
             Debug.Log("Google Mobile Ads initialization complete.");
         });
 
@@ -50,13 +57,35 @@ public class AdsManager : MonoBehaviour
 
     }
 
+    void HandleGameOver(GameOverEvent e)
+    {
+        if (!isMobileAdsInitialized)
+        {
+            MobileAds.Initialize((InitializationStatus initstatus) =>
+            {
+                if (initstatus == null) return;
+
+                isMobileAdsInitialized = true;
+                LoadBannerAd();
+                LoadRewardedAd();
+            });
+            return;
+        }
+
+        if (rewardedAd == null)
+            LoadRewardedAd();
+
+        if (bannerView == null)
+            LoadBannerAd();
+    }
+
     #region Banner Ad
 
     void CreateBannerView()
     {
         Debug.Log("Creating banner view");
 
-        if(bannerView != null)
+        if (bannerView != null)
         {
             DestroyBannerAd();
         }
@@ -66,7 +95,7 @@ public class AdsManager : MonoBehaviour
 
     void ShowBanner()
     {
-        if(bannerView == null)
+        if (bannerView == null)
         {
             CreateBannerView();
         }
@@ -94,9 +123,9 @@ public class AdsManager : MonoBehaviour
 
     void LoadBannerAd()
     {
-        if(bannerView == null)
+        if (bannerView == null)
         {
-             CreateBannerView();
+            CreateBannerView();
         }
 
         var adRequest = new AdRequest();
@@ -110,7 +139,7 @@ public class AdsManager : MonoBehaviour
 
     void LoadRewardedAd()
     {
-        if(rewardedAd != null)
+        if (rewardedAd != null)
         {
             rewardedAd.Destroy();
             rewardedAd = null;
@@ -137,6 +166,16 @@ public class AdsManager : MonoBehaviour
 
     void ShowRewardedAd()
     {
+        if (rewardedAd == null || !rewardedAd.CanShowAd())
+        {
+            Debug.LogWarning("Rewarded ad not ready (no connection?) — letting the game continue without it.");
+
+            EventBus<RewardEarnedEvent>.Publish(new RewardEarnedEvent { isRewardGiven = false });
+
+            LoadRewardedAd();
+            return;
+        }
+
         rewardGiven = false;
 
         rewardedAd.Show(reward =>
