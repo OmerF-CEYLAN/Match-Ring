@@ -534,7 +534,7 @@ public class GameUI : MonoBehaviour
         Sequence seq = DOTween.Sequence();
 
         seq.Append(
-            rectToAnimate.DOScale(1.3f, 1f)
+            rectToAnimate.DOScale(1.2f, 1f)
                 .SetEase(Ease.InOutSine)
         );
 

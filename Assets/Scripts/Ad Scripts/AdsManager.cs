@@ -11,6 +11,7 @@ public class AdsManager : MonoBehaviour
     string rewardedAdUnitId = "ca-app-pub-3940256099942544/5224354917";
 
     bool isMobileAdsInitialized;
+    bool isBannerLoaded;
 
     EventBinding<ShowBannerEvent> showBannerBinding;
     EventBinding<HideBannerEvent> hideBannerBinding;
@@ -75,7 +76,7 @@ public class AdsManager : MonoBehaviour
         if (rewardedAd == null)
             LoadRewardedAd();
 
-        if (bannerView == null)
+        if (!isBannerLoaded)
             LoadBannerAd();
     }
 
@@ -91,6 +92,16 @@ public class AdsManager : MonoBehaviour
         }
 
         bannerView = new BannerView(bannerAdUnitId, AdSize.LargeBanner, AdPosition.Bottom);
+
+        bannerView.OnBannerAdLoaded += () =>
+        {
+            isBannerLoaded = true;
+        };
+
+        bannerView.OnBannerAdLoadFailed += (LoadAdError error) =>
+        {
+            isBannerLoaded = false;
+        };
     }
 
     void ShowBanner()
@@ -98,6 +109,11 @@ public class AdsManager : MonoBehaviour
         if (bannerView == null)
         {
             CreateBannerView();
+        }
+
+        if (!isBannerLoaded)
+        {
+            LoadBannerAd();
         }
 
         Debug.Log("Showing Banner");
@@ -172,6 +188,7 @@ public class AdsManager : MonoBehaviour
 
             EventBus<RewardEarnedEvent>.Publish(new RewardEarnedEvent { isRewardGiven = false });
 
+            // Try to get a fresh ad in case the connection is back by the next attempt.
             LoadRewardedAd();
             return;
         }
