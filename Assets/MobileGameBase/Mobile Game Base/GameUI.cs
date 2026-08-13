@@ -26,7 +26,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameOverHighScoreText;
     [SerializeField] private GameObject newRecordObject;
     [SerializeField] private Button gameOverMainMenuButton;
-    [SerializeField] private Button continueButton;
+    //[SerializeField] private Button continueButton;
 
     [Header("Idle Screen")]
     [SerializeField] private TextMeshProUGUI idleHighScoreText;
@@ -129,7 +129,7 @@ public class GameUI : MonoBehaviour
     private void Start()
     {
         restartButton?.onClick.AddListener(OnRestartClicked);
-        continueButton?.onClick.AddListener(OnContinueClicked);
+        //continueButton?.onClick.AddListener(OnContinueClicked);
         playButton?.onClick.AddListener(OnPlayClicked);
 
         collectionButton.onClick.AddListener(OpenCollection);
@@ -341,7 +341,7 @@ public class GameUI : MonoBehaviour
         SetText(gameOverScoreText, Mathf.FloorToInt(e.finalScore).ToString());
         SetText(gameOverHighScoreText, e.highScore.ToString());
 
-        continueButton.gameObject.SetActive(GameManager.Instance.CanUseRewardedContinue);
+        //continueButton.gameObject.SetActive(GameManager.Instance.CanUseRewardedContinue);
     }
 
     void HandleComboIncreased(ComboIncreasedEvent e)
@@ -498,8 +498,8 @@ public class GameUI : MonoBehaviour
     
     private void OnContinueClicked()
     {
-        inputBlockerPanel.SetActive(true);
-        EventBus<ShowRewardedAdEvent>.Publish(new ShowRewardedAdEvent());
+        //inputBlockerPanel.SetActive(true);
+        //EventBus<ShowRewardedAdEvent>.Publish(new ShowRewardedAdEvent());
     }
 
     void OnRewardEarned(RewardEarnedEvent e)
