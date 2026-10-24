@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Localization Table_tr-TR
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: tr-TR
+  m_SharedData: {fileID: 11400000, guid: 296b0164c4bcb8643a848420a5f1d4a4, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 11097210880
+    m_Localized: Oyna
+    m_Metadata:
+      m_Items: []
+  - m_Id: 108530892800
+    m_Localized: Koleksiyon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185588645888
+    m_Localized: Ayarlar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 241158979584
+    m_Localized: Rekor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 515609067520
+    m_Localized: Ses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 558932033536
+    m_Localized: "M\xFCzik"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 604297625600
+    m_Localized: "Titre\u015Fim"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 892551168000
+    m_Localized: "Men\xFC"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 695863476224
+    m_Localized: Tekrar Oyna
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1307271364608
+    m_Localized: "Devam etmek i\xE7in dokun"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1507150921728
+    m_Localized: Yeni Rekor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1809086283776
+    m_Localized: "\u0130yi"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1861900959744
+    m_Localized: "M\xFCkemmel"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

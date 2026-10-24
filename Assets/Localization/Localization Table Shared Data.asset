@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Localization Table Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Localization Table
+  m_TableCollectionNameGuidString: 296b0164c4bcb8643a848420a5f1d4a4
+  m_Entries:
+  - m_Id: 11097210880
+    m_Key: play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 108530892800
+    m_Key: collection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185588645888
+    m_Key: settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 241158979584
+    m_Key: highScore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 515609067520
+    m_Key: sound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 558932033536
+    m_Key: music
+    m_Metadata:
+      m_Items: []
+  - m_Id: 604297625600
+    m_Key: vibration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 695863476224
+    m_Key: restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 892551168000
+    m_Key: menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1307271364608
+    m_Key: TaptoContinue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1507150921728
+    m_Key: NewRecord
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1809086283776
+    m_Key: good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1861900959744
+    m_Key: perfect
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3910224548621451524
+  references:
+    version: 2
+    RefIds:
+    - rid: 3910224548621451524
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1792865143272

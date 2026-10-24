@@ -9,5 +9,7 @@ EditorBuildSettings:
     path: Assets/MobileGameBase/MatchRing.unity
     guid: 4830145f374a4834299cbe387fe33bed
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 734fbccb51db86649a567282affa9705, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 289c1b55c9541489481df5cc06664110, type: 3}
+    com.unity.localization.settings: {fileID: 11400000, guid: a8a034c5c1bca0d4eab1f261f1e85951, type: 2}
   m_UseUCBPForAssetBundles: 0
