@@ -19,12 +19,13 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] GameObject idlePanel;
     [SerializeField] GameObject hudPanel;
 
-    [SerializeField] TMP_Text instructionText;
-    [SerializeField] TMP_Text feedbackText;
+    [SerializeField] TMP_Text holdInstructionText;
+    [SerializeField] TMP_Text tapInstructionText;
+    [SerializeField] TMP_Text failInstructionText;
 
-    [SerializeField] string holdInstruction = "Basýlý tut, tam zamanýnda býrak!";
-    [SerializeField] string tapInstruction = "Doðru zamanda dokun!";
-    [SerializeField] string failInstruction = "You missed. Try again!";
+    [SerializeField] TMP_Text feedbackText;
+    [SerializeField] TMP_Text perfectFeedbackText;
+    [SerializeField] TMP_Text tutorialCompletedFeedbackText;
 
     [SerializeField] float perfectThreshold = 10f;
     [SerializeField] float retryDelay = 1f;
@@ -59,6 +60,7 @@ public class TutorialManager : MonoBehaviour
 
     public void StartTutorial(Action onCompleteCallback)
     {
+        DisableInstructionTexts();
         onComplete = onCompleteCallback;
         IsActive = true;
         EventBus<TutorialStartedEvent>.Publish(new TutorialStartedEvent());
@@ -71,10 +73,12 @@ public class TutorialManager : MonoBehaviour
 
     void BeginHoldPractice()
     {
+        DisableInstructionTexts();
+
         currentStep = Step.Hold;
         currentMiniGame = holdMiniGame;
 
-        SetInstructionText(holdInstruction);
+        holdInstructionText.gameObject.SetActive(true);
 
         tapMiniGameSource.gameObject.SetActive(false);
         holdMiniGameSource.gameObject.SetActive(true);
@@ -83,20 +87,16 @@ public class TutorialManager : MonoBehaviour
 
     void BeginTapPractice()
     {
+        DisableInstructionTexts();
+     
         currentStep = Step.Tap;
         currentMiniGame = tapMiniGame;
 
-        SetInstructionText(tapInstruction);
+        tapInstructionText.gameObject.SetActive(true);
 
         holdMiniGameSource.gameObject.SetActive(false);
         tapMiniGameSource.gameObject.SetActive(true);
         tapMiniGame.BeginRound();
-    }
-
-    void SetInstructionText(string message)
-    {
-        if (instructionText != null)
-            instructionText.text = message;
     }
 
     void HandleResult(MiniGameRoundResultEvent e)
@@ -111,16 +111,20 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator RetryCurrentStep()
     {
+        DisableInstructionTexts();
+
         EventBus<MissMatchSFXEvent>.Publish(new MissMatchSFXEvent());
-        SetInstructionText(failInstruction);
+
+        failInstructionText.gameObject.SetActive(true);
         yield return new WaitForSeconds(retryDelay);
         currentMiniGame.BeginRound();
         yield return new WaitForSeconds(0.5f);
+        DisableInstructionTexts();
 
         if (currentStep == Step.Hold)
-            SetInstructionText(holdInstruction);
+            holdInstructionText.gameObject.SetActive(true);
         else
-            SetInstructionText(tapInstruction);
+            tapInstructionText.gameObject.SetActive(true);
     }
 
     void OnStepSuccess()
@@ -141,11 +145,10 @@ public class TutorialManager : MonoBehaviour
         OnStepSuccess();
     }
 
-    IEnumerator ShowFeedback(string message, float duration)
+    IEnumerator ShowFeedback(TMP_Text feedbackText ,float duration)
     {
         if (feedbackText != null)
         {
-            feedbackText.text = message;
             feedbackText.gameObject.SetActive(true);
         }
 
@@ -156,7 +159,7 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator ContinueToTapPractice()
     {
-        yield return StartCoroutine(ShowFeedback("Perfect!", delayBeforeContinuePrompt));
+        yield return StartCoroutine(ShowFeedback(perfectFeedbackText, delayBeforeContinuePrompt));
 
         holdMiniGameSource.gameObject.SetActive(false);
 
@@ -167,7 +170,7 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator WaitForContinueTap()
     {
-        SetInstructionText("");
+        DisableInstructionTexts();
         tapToContinuePanel?.SetActive(true);
 
         bool tapped = false;
@@ -182,15 +185,15 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator FinishTutorial()
     {
-        yield return StartCoroutine(ShowFeedback("Perfect!", delayBeforeContinuePrompt));
+        yield return StartCoroutine(ShowFeedback(perfectFeedbackText, delayBeforeContinuePrompt));
 
         tapMiniGameSource.gameObject.SetActive(false);
-        SetInstructionText("");
+        DisableInstructionTexts();
 
         PlayerPrefs.SetInt(TutorialCompletedKey, 1);
         PlayerPrefs.Save();
 
-        yield return StartCoroutine(ShowFeedback("Tutorial Completed!", completedDisplayDuration));
+        yield return StartCoroutine(ShowFeedback(tutorialCompletedFeedbackText, completedDisplayDuration));
 
         hudPanel?.SetActive(false);
         idlePanel?.SetActive(true);
@@ -204,5 +207,12 @@ public class TutorialManager : MonoBehaviour
         EventBus<TutorialCompletedEvent>.Publish(new TutorialCompletedEvent());
 
         onComplete?.Invoke();
+    }
+
+    void DisableInstructionTexts()
+    {
+        tapInstructionText.gameObject.SetActive(false);
+        holdInstructionText.gameObject.SetActive(false);
+        failInstructionText.gameObject.SetActive(false);
     }
 }

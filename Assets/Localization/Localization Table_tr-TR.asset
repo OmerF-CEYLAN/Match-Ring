@@ -67,7 +67,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1861900959744
-    m_Localized: "M\xFCkemmel"
+    m_Localized: "M\xFCkemmel!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 577373383819264
+    m_Localized: "Do\u011Fru zamanda dokun!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 577491558334464
+    m_Localized: "Ka\xE7\u0131rd\u0131n. Tekrar Dene!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 577632889602048
+    m_Localized: "Bas\u0131l\u0131 tut ve do\u011Fru zamanda b\u0131rak!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 585623042916352
+    m_Localized: "\xD6\u011Fretici Tamamland\u0131!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 591642900955136
+    m_Localized: "Ka\xE7\u0131rd\u0131n"
     m_Metadata:
       m_Items: []
   references:

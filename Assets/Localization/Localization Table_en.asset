@@ -67,7 +67,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1861900959744
-    m_Localized: Perfect
+    m_Localized: Perfect!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 577373383819264
+    m_Localized: Tap at the Right Time!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 577491558334464
+    m_Localized: You missed. Try again!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 577632889602048
+    m_Localized: Hold and Release at the Right Time!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 585623042916352
+    m_Localized: Tutorial Completed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 591642900955136
+    m_Localized: Missed
     m_Metadata:
       m_Items: []
   references:

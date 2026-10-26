@@ -19,6 +19,9 @@ public class GameUI : MonoBehaviour
     [Header("HUD")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI accuricyText;
+    [SerializeField] private TextMeshProUGUI perfectText;
+    [SerializeField] private TextMeshProUGUI goodText;
+    [SerializeField] private TextMeshProUGUI missText;
     [SerializeField] private TextMeshProUGUI comboText;
 
     [Header("Game Over Screen")]
@@ -463,16 +466,16 @@ public class GameUI : MonoBehaviour
 
         if (e.score == 3)
         {
-            accuricyText.text = "Perfect!";
+            accuricyText.text = perfectText.text;
             effect.enabled = true;
         }
         else if (e.score == 1)
         {
-            accuricyText.text = "Good!";
+            accuricyText.text = goodText.text;
         }
         else
         {
-            accuricyText.text = "Miss";
+            accuricyText.text = missText.text;
         }
 
         accuricyText.rectTransform.DOKill();
